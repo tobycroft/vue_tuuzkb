@@ -1,502 +1,392 @@
 <template>
-  <div class="container">
-    <div :class="connectionClass" class="connection-status">
-      {{ connectionMessage }}
+  <div class="page">
+    <div :class="ws.state.connectionClass" class="connection-status">
+      {{ ws.state.connectionMessage }}
     </div>
 
-    <div class="form">
-      <button @click="reconnect" class="submit-button" type="button">连接</button>
-
-      <div class="form-group">
-        <div class="radio-group">
-          <span>当前输出:{{ currentOutput }}</span>
+    <div class="info-panel">
+      <div class="row-2col">
+        <div class="output-row">
+          <button @click="switchOutput('A')" :class="getOutputClass('A')" type="button">A</button>
+          <button @click="switchOutput('B')" :class="getOutputClass('B')" type="button">B</button>
         </div>
-        <div class="radio-group">
-          <button @click="switchOutput('A')" :class="getOutputClass('A')" type="button">输出 A (10.0.0.90)</button>
-          <button @click="switchOutput('B')" :class="getOutputClass('B')" type="button">输出 B (10.0.0.92)</button>
+        <div class="compact-info">
+          <span><small>VID</small>{{ ws.state.vid || '—' }}</span>
+          <span><small>PID</small>{{ ws.state.pid || '—' }}</span>
+          <span><small>Baud</small>{{ ws.state.baud || '—' }}</span>
         </div>
-        <hr />
-        <div class="radio-group">
-          <span>不息屏:{{ wake }}</span>
-          <span>PID:{{ pid }}</span>
-          <span>VID:{{ vid }}</span>
-          <span>Baud:{{ baud }}</span>
-        </div>
-        <hr />
-        <div class="radio-group">
-          <span>MaskCtrl:</span>
-          <span v-for="item in MaskCtrl" :key="item"> {{ item }}</span>
-        </div>
-        <hr />
-        <div class="radio-group">
-          <span>MaskButton:</span>
-          <span v-for="item in MaskButton" :key="item"> {{ item }}</span>
-        </div>
-        <hr />
-        <div class="radio-group">LCD1:{{ LCD1 }}</div>
-        <hr />
-        <div class="radio-group">LCD2:{{ LCD2 }}</div>
       </div>
-      <hr />
+      <div class="compact-lcd">
+        <span class="lcd-label-sm">LCD1</span>
+        <span class="lcd-text-sm">{{ ws.state.LCD1 }}</span>
+        <span class="lcd-divider">|</span>
+        <span class="lcd-label-sm">LCD2</span>
+        <span class="lcd-text-sm">{{ ws.state.LCD2 }}</span>
+      </div>
+    </div>
 
-      <div class="slider-label">前置震动: {{ Endpoint_BeforeDelay_Random }}</div>
+    <div class="mask-panel" v-if="(ws.state.MaskCtrl && ws.state.MaskCtrl.length > 0) || (ws.state.MaskButton && ws.state.MaskButton.length > 0)">
+      <div class="mask-title">屏蔽状态</div>
+      <div class="mask-row" v-if="ws.state.MaskCtrl && ws.state.MaskCtrl.length > 0">
+        <span class="mask-label">Ctrl</span>
+        <span class="mask-values">{{ formatHexList(ws.state.MaskCtrl) }}</span>
+      </div>
+      <div class="mask-row" v-if="ws.state.MaskButton && ws.state.MaskButton.length > 0">
+        <span class="mask-label">Btn</span>
+        <span class="mask-values">{{ formatHexList(ws.state.MaskButton) }}</span>
+      </div>
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-label">前置震动: {{ ws.state.Endpoint_BeforeDelay_Random }}</div>
       <input
           type="range"
           class="slider"
-          :value="Endpoint_BeforeDelay_Random"
+          :value="ws.state.Endpoint_BeforeDelay_Random"
           min="0"
           max="30"
           step="1"
           @change="onSliderChange('Endpoint_BeforeDelay_Random', $event)"
       />
+    </div>
 
-      <div class="slider-label">前置时间: {{ Endpoint_BeforeDelay }}</div>
+    <div class="slider-group">
+      <div class="slider-label">前置时间: {{ ws.state.Endpoint_BeforeDelay }}</div>
       <input
           type="range"
           class="slider"
-          :value="Endpoint_BeforeDelay"
+          :value="ws.state.Endpoint_BeforeDelay"
           min="0"
           max="50"
           step="1"
           @change="onSliderChange('Endpoint_BeforeDelay', $event)"
       />
+    </div>
 
-      <div class="slider-label">操作间隔: {{ Endpoint_delay }}</div>
+    <div class="slider-group">
+      <div class="slider-label">操作间隔: {{ ws.state.Endpoint_delay }}</div>
       <input
           type="range"
           class="slider"
-          :value="Endpoint_delay"
+          :value="ws.state.Endpoint_delay"
           min="0"
           max="200"
           step="1"
           @change="onSliderChange('Endpoint_delay', $event)"
       />
+    </div>
 
-      <div class="form-group">
-        <div class="radio-group">
-          <button @click="modeOption(0)" :class="getModeClass(0)" type="button">关闭</button>
-          <button @click="modeOption(1)" :class="getModeClass(1)" type="button">On-Q</button>
-          <button @click="modeOption(2)" :class="getModeClass(2)" type="button">On-Whel</button>
-        </div>
-      </div>
+    <div class="section-title">触发模式</div>
+    <div class="btn-row">
+      <button @click="modeOption(0)" :class="getModeClass(0)" type="button">关闭</button>
+      <button @click="modeOption(1)" :class="getModeClass(1)" type="button">On-Q</button>
+      <button @click="modeOption(2)" :class="getModeClass(2)" type="button">On-Whel</button>
+    </div>
 
-      <div class="form-group">
-        <div class="radio-group">
-          <button @click="endPointOption(0)" :class="getEndpointClass(0)" type="button">Ste</button>
-          <button @click="endPointOption(1)" :class="getEndpointClass(1)" type="button">Dym</button>
-          <button @click="endPointOption(2)" :class="getEndpointClass(2)" type="button">Wde</button>
-          <button @click="endPointOption(3)" :class="getEndpointClass(3)" type="button">Ato</button>
-          <button @click="endPointOption(4)" :class="getEndpointClass(4)" type="button">Atw</button>
-          <button @click="endPointOption(5)" :class="getEndpointClass(5)" type="button">Man</button>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="radio-group">
-          <button @click="cmdFunc('setting_reset')" type="button">重置</button>
-          <button @click="cmdFunc('bankey')" type="button">屏蔽键</button>
-          <button @click="cmdFunc('unbanall')" type="button">解除屏蔽</button>
-        </div>
-      </div>
-
-      <div class="slider-label">系统Sep: {{ sep }}</div>
-      <input
-          type="range"
-          class="slider"
-          :value="sep"
-          min="1"
-          max="50"
-          step="1"
-          @change="onSliderChange('sep', $event)"
-      />
-
-      <div class="form-group">
-        <div class="radio-group">
-          <button @click="cmdFunc('reset')" type="button">重启</button>
-          <button @click="cmdFunc('cfgget')" type="button">获取CFG</button>
-        </div>
-
-        <div class="radio-group">
-          <button @click="cmdFunc('cfg3k')" type="button">B-300K</button>
-          <button @click="cmdFunc('cfg115k')" type="button">B-115k</button>
-          <button @click="cmdFunc('cfg9k')" type="button">B-9k</button>
-        </div>
-
-        <div class="radio-group">
-          <button @click="cmdFunc('05ac')" type="button">Def115</button>
-          <button @click="cmdFunc('alldef9k')" type="button">Def9k</button>
-          <button @click="cmdFunc('setusb')" type="button">设定USBstr</button>
-        </div>
-
-        <div class="form-group">
-          <div class="radio-group">
-            <button @click="kbModeOption(0)" :class="getKbModeClass(0)" type="button">M1</button>
-            <button @click="kbModeOption(1)" :class="getKbModeClass(1)" type="button">M2</button>
-            <button @click="kbModeOption(2)" :class="getKbModeClass(2)" type="button">M3</button>
-            <button @click="kbModeOption(3)" :class="getKbModeClass(3)" type="button">M4</button>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="radio-group">
-            <button @click="kbCfgOption(0)" :class="getKbCfgClass(0)" type="button">Norm</button>
-            <button @click="kbCfgOption(1)" :class="getKbCfgClass(1)" type="button">ASCII</button>
-            <button @click="kbCfgOption(2)" :class="getKbCfgClass(2)" type="button">Pass</button>
-          </div>
-        </div>
-      </div>
+    <div class="section-title">键盘模式</div>
+    <div class="btn-row">
+      <button @click="endPointOption(0)" :class="getEndpointClass(0)" type="button">Ste</button>
+      <button @click="endPointOption(1)" :class="getEndpointClass(1)" type="button">Dym</button>
+      <button @click="endPointOption(2)" :class="getEndpointClass(2)" type="button">Wde</button>
+      <button @click="endPointOption(3)" :class="getEndpointClass(3)" type="button">Ato</button>
+      <button @click="endPointOption(4)" :class="getEndpointClass(4)" type="button">Atw</button>
+      <button @click="endPointOption(5)" :class="getEndpointClass(5)" type="button">Man</button>
     </div>
   </div>
 </template>
 
 <script>
+import ws from '../../store/ws.js'
+
 export default {
   name: 'IndexPage',
   data() {
-    return {
-      wake: null,
-      wakeLock: null,
-      MaskCtrl: '',
-      MaskButton: '',
-      pid: '',
-      vid: '',
-      baud: 0,
-      connectionMessage: '未连接',
-      Endpoint_BeforeDelay_Random: 0,
-      Endpoint_BeforeDelay: 0,
-      Endpoint_delay: 0,
-      Endpoint_dynamic_mode: 0,
-      sep: 1,
-      LCD1: '',
-      LCD2: '',
-      connectionClass: 'status-failed',
-      Mode: 0,
-      socket: null,
-      kbmode: 0,
-      kbcfg: 0,
-      heartbeatTimer: null,
-      currentOutput: '',
-    };
+    return { ws: ws };
   },
   mounted() {
-    this.reconnect();
-  },
-  beforeUnmount() {
-    if (this.heartbeatTimer) {
-      clearInterval(this.heartbeatTimer);
-      this.heartbeatTimer = null;
-    }
-    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-      this.socket.close();
-    }
+    ws.reconnect();
   },
   methods: {
-    reconnect() {
-      const ip = localStorage.getItem('config_ip');
-
-      if (ip) {
-        this.connectWebSocket(ip);
-      }
-    },
-    cmdFunc(type) {
-      if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
-        return;
-      }
-      const data = {
-        route: "kbd",
-        type: type,
-      };
-      this.socket.send(JSON.stringify(data));
-    },
     onSliderChange(field, event) {
       const value = Number(event.target.value);
-      if (this[field] !== value) {
-        this[field] = value;
-        console.log(`${field} value:`, value);
-        if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-          this.socket.send(JSON.stringify({
-            route: "semi-config",
-            type: field,
-            'data': this.$data
-          }));
-        }
-      }
+      ws.state[field] = value;
+      ws.requestSemiConfig(field, this.getSnapshot());
     },
-    connectWebSocket(url) {
-      this.connectionMessage = '连接中……';
-      this.connectionClass = 'status-progress';
-
-      try {
-        this.socket = new WebSocket(url);
-      } catch (err) {
-        this.connectionMessage = '连接失败×';
-        this.connectionClass = 'status-failed';
-        return;
-      }
-
-      this.socket.onopen = () => {
-        this.connectionMessage = '连接建立';
-        this.connectionClass = 'status-success';
-        this.setWakeLock();
-        this.updateData();
+    getSnapshot() {
+      const s = ws.state;
+      return {
+        Endpoint_BeforeDelay_Random: s.Endpoint_BeforeDelay_Random,
+        Endpoint_BeforeDelay: s.Endpoint_BeforeDelay,
+        Endpoint_delay: s.Endpoint_delay,
+        Endpoint_dynamic_mode: s.Endpoint_dynamic_mode,
+        Mode: s.Mode,
+        kbmode: s.kbmode,
+        kbcfg: s.kbcfg,
+        sep: s.sep
       };
-
-      this.socket.onerror = () => {
-        this.connectionMessage = '连接错误';
-        this.connectionClass = 'status-failed';
-      };
-
-      this.socket.onmessage = (event) => {
-        if (event.data === 'update') {
-          this.updateData();
-          return;
-        }
-        try {
-          const data = JSON.parse(event.data);
-          this.updateFormData(data);
-        } catch (e) {
-          console.error('解析消息失败:', e);
-        }
-      };
-
-      this.socket.onclose = () => {
-        this.connectionMessage = '连接被关闭';
-        this.connectionClass = 'status-failed';
-      };
-    },
-    updateData() {
-      if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
-        return;
-      }
-      const data = {
-        route: "info",
-      };
-      this.socket.send(JSON.stringify(data));
-
-      if (this.heartbeatTimer) {
-        clearInterval(this.heartbeatTimer);
-      }
-      this.heartbeatTimer = setInterval(() => {
-        if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-          const data = {
-            route: "ping",
-          };
-          this.socket.send(JSON.stringify(data));
-        }
-      }, 9000);
-    },
-    updateFormData(data) {
-      console.log(data);
-      for (const i in data) {
-        if (this[i] !== null) {
-          this[i] = data[i];
-        }
-      }
     },
     modeOption(option) {
-      this.Mode = option;
-      if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-        this.socket.send(JSON.stringify({
-          route: "semi-config",
-          type: "Mode",
-          'data': this.$data,
-        }));
-      }
+      ws.state.Mode = option;
+      ws.requestSemiConfig('Mode', this.getSnapshot());
     },
     endPointOption(option) {
-      this.Endpoint_dynamic_mode = option;
-      if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-        this.socket.send(JSON.stringify({
-          route: "semi-config",
-          type: "Endpoint_dynamic_mode",
-          'data': this.$data,
-        }));
-      }
-    },
-    kbModeOption(option) {
-      this.kbmode = option;
-      if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-        this.socket.send(JSON.stringify({
-          route: "semi-config",
-          type: "kbmode",
-          'data': this.$data,
-        }));
-      }
-    },
-    kbCfgOption(option) {
-      this.kbcfg = option;
-      if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-        this.socket.send(JSON.stringify({
-          route: "semi-config",
-          type: "kbcfg",
-          'data': this.$data,
-        }));
-      }
+      ws.state.Endpoint_dynamic_mode = option;
+      ws.requestSemiConfig('Endpoint_dynamic_mode', this.getSnapshot());
     },
     getEndpointClass(option) {
-      return this.Endpoint_dynamic_mode === option ? 'option-selected' : 'option';
+      return ws.state.Endpoint_dynamic_mode === option ? 'option-selected' : '';
     },
     getModeClass(option) {
-      return this.Mode === option ? 'option-selected' : 'option';
-    },
-    getKbModeClass(option) {
-      return this.kbmode === option ? 'option-selected' : 'option';
-    },
-    getKbCfgClass(option) {
-      return this.kbcfg === option ? 'option-selected' : 'option';
+      return ws.state.Mode === option ? 'option-selected' : '';
     },
     switchOutput(name) {
-      this.currentOutput = name;
-      if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-        this.socket.send(JSON.stringify({
-          route: "semi-config",
-          type: "switch_output",
-          'data': { name: name },
-        }));
-      }
-    },
-    getOutputClass(name) {
-      return this.currentOutput === name ? 'option-selected' : 'option';
-    },
-    setWakeLock() {
-      if (this.wakeLock) {
-        return;
-      }
-      if (!navigator.wakeLock || !navigator.wakeLock.request) {
-        console.log('当前浏览器不支持 wakeLock');
-        return;
-      }
-      navigator.wakeLock.request('screen').then(result => {
-        this.wakeLock = result;
-        this.wake = '唤醒锁定已激活';
-        console.log('唤醒锁定已激活');
-        console.log(result);
-        this.wakeLock.addEventListener('release', () => {
-          this.wakeLock = null;
-          this.wake = '唤醒锁定已释放';
-          console.log('唤醒锁定已释放');
-        });
-      }).catch((err) => {
-        console.error(`唤醒锁定失败：${err.message}`);
+      ws.state.currentOutput = name;
+      ws.sendMessage({
+        route: "semi-config",
+        type: "switch_output",
+        data: { name: name }
       });
     },
+    getOutputClass(name) {
+      return ws.state.currentOutput === name ? 'option-selected' : '';
+    },
+    formatHexList(arr) {
+      if (!arr || arr.length === 0) return '—';
+      return arr.map(v => v.length === 1 ? '0' + v.toUpperCase() : v.toUpperCase()).join(', ');
+    }
   }
 };
 </script>
 
 <style scoped>
-hr {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  border: none;
-  border-top: 1px solid #e5e5e5;
-}
-
-.container {
+.page {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 10px;
+  padding: 12px;
+  gap: 10px;
 }
 
 .connection-status {
   width: 100%;
   text-align: center;
-  padding: 10px;
+  padding: 14px;
   color: #fff;
-  border-radius: 4px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.status-success { background-color: #2d7a2d; }
+.status-progress { background-color: #3a6fa8; }
+.status-failed { background-color: #a83a3a; }
+
+.info-panel {
+  background-color: #1c1c1e;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.row-2col {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  margin-bottom: 10px;
+}
+
+.row-2col > * { flex: 1; }
+
+.output-row {
+  display: flex;
+  gap: 6px;
+}
+
+.output-row button {
+  flex: 1;
+  padding: 14px 10px;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  background-color: #2c2c2e;
+  color: #ddd;
+  border-radius: 8px;
+  border: 1px solid #3a3a3c;
+  cursor: pointer;
+}
+
+.output-row .option-selected {
+  background-color: #3cc51f;
+  color: #fff;
+  border-color: #3cc51f;
+}
+
+.compact-info {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  color: #e0e0e0;
+  background-color: #2c2c2e;
+  border: 1px solid #3a3a3c;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.compact-info span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.compact-info small {
+  color: #888;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.compact-lcd {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  flex-wrap: nowrap;
+}
+
+.lcd-label-sm {
+  font-size: 13px;
+  font-weight: 700;
+  color: #888;
+}
+
+.lcd-divider { color: #444; font-size: 13px; margin: 0 2px; }
+
+.lcd-text-sm {
+  flex: 1;
+  min-width: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  padding: 10px 12px;
+  background-color: #000;
+  color: #7cfc00;
+  border-radius: 6px;
+  white-space: pre;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px solid #1a3a1a;
+}
+
+.section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #bbb;
+  margin: 10px 0 4px 0;
+  padding-left: 4px;
+  letter-spacing: 0.5px;
+}
+
+.slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .slider-label {
-  font-size: 18px;
-  margin: 20px 0 10px 0;
-  width: 100%;
+  font-size: 15px;
+  margin: 4px 0 6px 4px;
+  color: #ddd;
+  font-weight: 600;
 }
 
 .slider {
   width: 100%;
-  height: 28px;
+  height: 48px;
   accent-color: #3cc51f;
-}
-
-.status-success {
-  background-color: green;
-}
-
-.status-progress {
-  background-color: cornflowerblue;
-}
-
-.status-failed {
-  background-color: red;
-}
-
-.form-group {
-  margin-bottom: 20px;
-  width: 100%;
-}
-
-.radio-group {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin: 5px 0;
-  width: 100%;
-}
-
-.radio-group > span {
-  font-size: 14px;
-}
-
-button {
-  flex: 1;
-  min-width: 60px;
-  margin: 5px;
-  padding: 10px;
-  background-color: #ddd;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  text-align: center;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-button:hover {
-  background-color: #ccc;
-}
-
-button:active {
-  background-color: #bbb;
-}
-
-.option-selected {
-  background-color: #3cc51f;
-  color: #fff;
-}
-
-.option-selected:hover {
-  background-color: #36b01c;
-}
-
-.submit-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #3cc51f;
-  color: white;
-  font-size: 18px;
-  border-radius: 5px;
-  border: none;
   margin: 0;
 }
 
-.submit-button:hover {
-  background-color: #36b01c;
+.btn-row {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+  flex-wrap: nowrap;
 }
 
-.form {
-  width: 100%;
+.btn-row button {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 16px 8px;
+  background-color: #2c2c2e;
+  border: 1px solid #3a3a3c;
+  border-radius: 10px;
+  font-size: 17px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+  color: #ddd;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.btn-row button:hover {
+  background-color: #3a3a3c;
+  border-color: #4a4a4c;
+}
+
+.btn-row button:active {
+  background-color: #4a4a4c;
+}
+
+.btn-row .option-selected {
+  background-color: #3cc51f;
+  color: #fff;
+  border-color: #3cc51f;
+}
+
+.mask-panel {
+  background-color: #1c1c1e;
+  border: 1px solid #5a2a2a;
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.mask-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ff6b6b;
+  margin: 0 0 8px 4px;
+  letter-spacing: 0.5px;
+}
+
+.mask-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 4px 0;
+}
+
+.mask-label {
+  flex-shrink: 0;
+  width: 44px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #aaa;
+  padding-top: 2px;
+}
+
+.mask-values {
+  flex: 1;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: #ffc9c9;
+  font-weight: 600;
+  line-height: 1.5;
+  word-break: break-all;
 }
 </style>

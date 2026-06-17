@@ -1,129 +1,243 @@
 <template>
-  <div class="container">
-    <div class="title">服务器设置</div>
-
-    <div class="input-container">
-      <input
-          type="text"
-          placeholder="请输入 ws开头的url 地址 "
-          v-model="ipAddress"
-          class="input-field"
-      />
+  <div class="page">
+    <div class="section-title">屏蔽控制</div>
+    <div class="btn-row">
+      <button @click="cmd('setting_reset')" type="button">重置</button>
+      <button @click="cmd('bankey')" type="button">屏蔽键</button>
+      <button @click="cmd('unbanall')" type="button">解除屏蔽</button>
     </div>
 
-    <button @click="setConfiguration" class="set-button" type="button">设定</button>
+    <div class="mask-panel" v-if="(ws.state.MaskCtrl && ws.state.MaskCtrl.length > 0) || (ws.state.MaskButton && ws.state.MaskButton.length > 0)">
+      <div class="mask-title">屏蔽状态</div>
+      <div class="mask-row" v-if="ws.state.MaskCtrl && ws.state.MaskCtrl.length > 0">
+        <span class="mask-label">Ctrl</span>
+        <span class="mask-values">{{ formatHexList(ws.state.MaskCtrl) }}</span>
+      </div>
+      <div class="mask-row" v-if="ws.state.MaskButton && ws.state.MaskButton.length > 0">
+        <span class="mask-label">Btn</span>
+        <span class="mask-values">{{ formatHexList(ws.state.MaskButton) }}</span>
+      </div>
+    </div>
+
+    <div class="section-title">系统配置</div>
+    <div class="slider-label">系统 Sep: {{ ws.state.sep }}</div>
+    <input
+        type="range"
+        class="slider"
+        :value="ws.state.sep"
+        min="1"
+        max="50"
+        step="1"
+        @change="onSepChange($event)"
+    />
+
+    <div class="section-title">波特率</div>
+    <div class="btn-row">
+      <button @click="cmd('reset')" type="button">重启</button>
+      <button @click="cmd('cfgget')" type="button">CFG</button>
+      <button @click="cmd('cfg3k')" type="button">300K</button>
+      <button @click="cmd('cfg115k')" type="button">115K</button>
+      <button @click="cmd('cfg9k')" type="button">9K</button>
+    </div>
+    <div class="btn-row">
+      <button @click="cmd('05ac')" type="button">Def115</button>
+      <button @click="cmd('alldef9k')" type="button">Def9k</button>
+      <button @click="cmd('setusb')" type="button">USB</button>
+    </div>
+
+    <div class="section-title">键盘模式（M）</div>
+    <div class="btn-row">
+      <button @click="kbModeOption(0)" :class="getKbModeClass(0)" type="button">M1</button>
+      <button @click="kbModeOption(1)" :class="getKbModeClass(1)" type="button">M2</button>
+      <button @click="kbModeOption(2)" :class="getKbModeClass(2)" type="button">M3</button>
+      <button @click="kbModeOption(3)" :class="getKbModeClass(3)" type="button">M4</button>
+    </div>
+
+    <div class="section-title">键盘编码</div>
+    <div class="btn-row">
+      <button @click="kbCfgOption(0)" :class="getKbCfgClass(0)" type="button">Norm</button>
+      <button @click="kbCfgOption(1)" :class="getKbCfgClass(1)" type="button">ASCII</button>
+      <button @click="kbCfgOption(2)" :class="getKbCfgClass(2)" type="button">Pass</button>
+    </div>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'SettingsPage',
-  data() {
-    return {
-      ipAddress: "",
-      port: ""
-    };
-  },
-  mounted() {
-    const storedIp = localStorage.getItem('config_ip');
-    const storedPort = localStorage.getItem('config_port');
+import ws from '../../store/ws.js'
 
-    if (storedIp) {
-      this.ipAddress = storedIp;
-    }
-    if (storedPort) {
-      this.port = storedPort;
-    }
+export default {
+  name: 'HardwarePage',
+  data() {
+    return { ws: ws };
   },
   methods: {
-    resolveWsAddress(value) {
-      const trimmed = value.trim();
-      if (!trimmed) return "";
-
-      if (trimmed.includes("://")) {
-        return trimmed;
-      }
-
-      if (trimmed.startsWith("/")) {
-        const { protocol, host } = window.location;
-        const wsProtocol = protocol === "https:" ? "wss:" : "ws:";
-        return `${wsProtocol}//${host}${trimmed}`;
-      }
-
-      return `ws://${trimmed}`;
+    cmd(type) {
+      ws.cmdFunc(type);
     },
-    setConfiguration() {
-      if (this.ipAddress === "") {
-        alert("请输入有效的 IP 地址和端口号");
-        return;
-      }
-
-      const resolvedIp = this.resolveWsAddress(this.ipAddress);
-      localStorage.setItem("config_ip", resolvedIp);
-      localStorage.setItem("config_port", this.port);
-
-      this.ipAddress = resolvedIp;
-      alert("设置已保存");
+    getSnapshot() {
+      const s = ws.state;
+      return {
+        Endpoint_BeforeDelay_Random: s.Endpoint_BeforeDelay_Random,
+        Endpoint_BeforeDelay: s.Endpoint_BeforeDelay,
+        Endpoint_delay: s.Endpoint_delay,
+        Endpoint_dynamic_mode: s.Endpoint_dynamic_mode,
+        Mode: s.Mode,
+        kbmode: s.kbmode,
+        kbcfg: s.kbcfg,
+        sep: s.sep
+      };
+    },
+    onSepChange(event) {
+      const value = Number(event.target.value);
+      ws.state.sep = value;
+      ws.sendMessage({
+        route: 'semi-config',
+        type: 'sep',
+        data: {
+          sep: value,
+          Endpoint_BeforeDelay_Random: ws.state.Endpoint_BeforeDelay_Random,
+          Endpoint_BeforeDelay: ws.state.Endpoint_BeforeDelay,
+          Endpoint_delay: ws.state.Endpoint_delay,
+          Endpoint_dynamic_mode: ws.state.Endpoint_dynamic_mode,
+          Mode: ws.state.Mode,
+          kbmode: ws.state.kbmode,
+          kbcfg: ws.state.kbcfg
+        }
+      });
+    },
+    kbModeOption(option) {
+      ws.state.kbmode = option;
+      ws.requestSemiConfig('kbmode', this.getSnapshot());
+    },
+    kbCfgOption(option) {
+      ws.state.kbcfg = option;
+      ws.requestSemiConfig('kbcfg', this.getSnapshot());
+    },
+    getKbModeClass(option) {
+      return ws.state.kbmode === option ? 'option-selected' : '';
+    },
+    getKbCfgClass(option) {
+      return ws.state.kbcfg === option ? 'option-selected' : '';
+    },
+    formatHexList(arr) {
+      if (!arr || arr.length === 0) return '—';
+      return arr.map(v => v.length === 1 ? '0' + v.toUpperCase() : v.toUpperCase()).join(', ');
     }
   }
 };
 </script>
 
 <style scoped>
-.container {
+.page {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 20px 10px;
-  min-height: 80vh;
+  padding: 12px;
+  gap: 8px;
 }
 
-.title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 30px;
+.section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #bbb;
+  margin: 8px 0 6px 0;
+  padding-left: 4px;
+  letter-spacing: 0.5px;
 }
 
-.input-container {
+.slider-label {
+  font-size: 14px;
+  margin: 6px 0 6px 4px;
+  color: #ddd;
+  font-weight: 600;
+}
+
+.slider {
   width: 100%;
-  padding: 0;
-  margin-bottom: 20px;
+  height: 48px;
+  accent-color: #3cc51f;
+  margin: 0 0 6px 0;
 }
 
-.input-field {
-  width: 95%;
-  height: 45px;
-  margin-bottom: 15px;
-  padding: 10px;
-  border: 1px solid #ccc;
+.btn-row {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+  flex-wrap: nowrap;
+}
+
+.btn-row button {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 16px 8px;
+  background-color: #2c2c2e;
+  border: 1px solid #3a3a3c;
   border-radius: 10px;
-  background-color: #ffffff;
-  font-size: 16px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
-}
-
-.set-button {
-  width: 80%;
-  height: 45px;
-  background-color: #3cc51f;
-  color: #ffffff;
-  font-size: 18px;
+  font-size: 15px;
+  font-weight: 700;
   text-align: center;
-  line-height: 45px;
-  border-radius: 10px;
-  border: none;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.15s, border-color 0.15s;
+  color: #ddd;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.set-button:hover {
-  background-color: #36b01c;
+.btn-row button:hover {
+  background-color: #3a3a3c;
+  border-color: #4a4a4c;
 }
 
-.set-button:active {
-  background-color: #2e9e18;
+.btn-row button:active {
+  background-color: #4a4a4c;
+}
+
+.btn-row .option-selected {
+  background-color: #3cc51f;
+  color: #fff;
+  border-color: #3cc51f;
+}
+
+.mask-panel {
+  background-color: #1c1c1e;
+  border: 1px solid #5a2a2a;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 6px 0;
+}
+
+.mask-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ff6b6b;
+  margin: 0 0 8px 4px;
+  letter-spacing: 0.5px;
+}
+
+.mask-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 4px 0;
+}
+
+.mask-label {
+  flex-shrink: 0;
+  width: 44px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #aaa;
+  padding-top: 2px;
+}
+
+.mask-values {
+  flex: 1;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: #ffc9c9;
+  font-weight: 600;
+  line-height: 1.5;
+  word-break: break-all;
 }
 </style>
