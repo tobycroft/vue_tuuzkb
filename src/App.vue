@@ -41,9 +41,9 @@ export default {
       if (y <= 0) {
         this.showTab = true;
       } else if (y > this.lastScrollY + 6) {
-        this.showTab = false;
-      } else if (y < this.lastScrollY - 6) {
         this.showTab = true;
+      } else if (y < this.lastScrollY - 6) {
+        this.showTab = false;
       }
       this.lastScrollY = y;
     }
