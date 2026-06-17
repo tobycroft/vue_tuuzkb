@@ -4,17 +4,16 @@
       {{ ws.state.connectionMessage }}
     </div>
 
+    <div class="output-row">
+      <button @click="switchOutput('A')" :class="getOutputClass('A')" type="button">输出 A</button>
+      <button @click="switchOutput('B')" :class="getOutputClass('B')" type="button">输出 B</button>
+    </div>
+
     <div class="info-panel">
-      <div class="row-2col">
-        <div class="output-row">
-          <button @click="switchOutput('A')" :class="getOutputClass('A')" type="button">A</button>
-          <button @click="switchOutput('B')" :class="getOutputClass('B')" type="button">B</button>
-        </div>
-        <div class="compact-info">
-          <span><small>VID</small>{{ ws.state.vid || '—' }}</span>
-          <span><small>PID</small>{{ ws.state.pid || '—' }}</span>
-          <span><small>Baud</small>{{ ws.state.baud || '—' }}</span>
-        </div>
+      <div class="compact-info">
+        <span><small>VID</small>{{ ws.state.vid || '—' }}</span>
+        <span><small>PID</small>{{ ws.state.pid || '—' }}</span>
+        <span><small>Baud</small>{{ ws.state.baud || '—' }}</span>
       </div>
       <div class="compact-lcd">
         <span class="lcd-label-sm">LCD1</span>
@@ -183,31 +182,30 @@ export default {
   padding: 12px 14px;
 }
 
-.row-2col {
-  display: flex;
-  gap: 10px;
-  align-items: stretch;
-  margin-bottom: 10px;
-}
-
-.row-2col > * { flex: 1; }
-
 .output-row {
   display: flex;
   gap: 6px;
+  width: 100%;
+  flex-wrap: nowrap;
 }
 
 .output-row button {
   flex: 1;
-  padding: 14px 10px;
-  margin: 0;
-  font-size: 18px;
-  font-weight: 700;
+  min-width: 0;
+  padding: 16px 8px;
   background-color: #2c2c2e;
-  color: #ddd;
-  border-radius: 8px;
   border: 1px solid #3a3a3c;
+  border-radius: 10px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #ddd;
   cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.output-row button:hover {
+  background-color: #3a3a3c;
+  border-color: #4a4a4c;
 }
 
 .output-row .option-selected {
