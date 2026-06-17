@@ -38,11 +38,9 @@ export default {
   methods: {
     handleScroll() {
       const y = window.scrollY || window.pageYOffset || 0;
-      if (y <= 0) {
+      if (y > this.lastScrollY + 10) {
         this.showTab = true;
-      } else if (y > this.lastScrollY + 6) {
-        this.showTab = true;
-      } else if (y < this.lastScrollY - 6) {
+      } else if (y < this.lastScrollY - 10) {
         this.showTab = false;
       }
       this.lastScrollY = y;
@@ -88,7 +86,7 @@ body {
   border-top: 1px solid #2a2a2a;
   z-index: 100;
   padding: 10px 0 14px 0;
-  transition: transform 0.25s ease;
+  transition: transform 0.18s ease-out;
   box-shadow: 0 -4px 12px rgba(0,0,0,0.35);
 }
 
