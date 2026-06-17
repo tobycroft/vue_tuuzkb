@@ -37,60 +37,64 @@
       </div>
     </div>
 
-    <div class="slider-group">
-      <div class="slider-label">前置震动: {{ ws.state.Endpoint_BeforeDelay_Random }}</div>
-      <input
-          type="range"
-          class="slider"
-          :value="ws.state.Endpoint_BeforeDelay_Random"
-          min="0"
-          max="30"
-          step="1"
-          @change="onSliderChange('Endpoint_BeforeDelay_Random', $event)"
-      />
+    <div class="sliders-panel">
+      <div class="slider-row">
+        <div class="slider-label">前置震动: {{ ws.state.Endpoint_BeforeDelay_Random }}</div>
+        <input
+            type="range"
+            class="slider"
+            :value="ws.state.Endpoint_BeforeDelay_Random"
+            min="0"
+            max="30"
+            step="1"
+            @change="onSliderChange('Endpoint_BeforeDelay_Random', $event)"
+        />
+      </div>
+
+      <div class="slider-row">
+        <div class="slider-label">前置时间: {{ ws.state.Endpoint_BeforeDelay }}</div>
+        <input
+            type="range"
+            class="slider"
+            :value="ws.state.Endpoint_BeforeDelay"
+            min="0"
+            max="50"
+            step="1"
+            @change="onSliderChange('Endpoint_BeforeDelay', $event)"
+        />
+      </div>
+
+      <div class="slider-row">
+        <div class="slider-label">操作间隔: {{ ws.state.Endpoint_delay }}</div>
+        <input
+            type="range"
+            class="slider"
+            :value="ws.state.Endpoint_delay"
+            min="0"
+            max="200"
+            step="1"
+            @change="onSliderChange('Endpoint_delay', $event)"
+        />
+      </div>
     </div>
 
-    <div class="slider-group">
-      <div class="slider-label">前置时间: {{ ws.state.Endpoint_BeforeDelay }}</div>
-      <input
-          type="range"
-          class="slider"
-          :value="ws.state.Endpoint_BeforeDelay"
-          min="0"
-          max="50"
-          step="1"
-          @change="onSliderChange('Endpoint_BeforeDelay', $event)"
-      />
-    </div>
+    <div :class="['bottom-bar', showBottom ? 'bottom-bar-visible' : 'bottom-bar-hidden']">
+      <div class="section-title-sm">触发模式</div>
+      <div class="btn-row">
+        <button @click="modeOption(0)" :class="getModeClass(0)" type="button">关闭</button>
+        <button @click="modeOption(1)" :class="getModeClass(1)" type="button">On-Q</button>
+        <button @click="modeOption(2)" :class="getModeClass(2)" type="button">On-Whel</button>
+      </div>
 
-    <div class="slider-group">
-      <div class="slider-label">操作间隔: {{ ws.state.Endpoint_delay }}</div>
-      <input
-          type="range"
-          class="slider"
-          :value="ws.state.Endpoint_delay"
-          min="0"
-          max="200"
-          step="1"
-          @change="onSliderChange('Endpoint_delay', $event)"
-      />
-    </div>
-
-    <div class="section-title">触发模式</div>
-    <div class="btn-row">
-      <button @click="modeOption(0)" :class="getModeClass(0)" type="button">关闭</button>
-      <button @click="modeOption(1)" :class="getModeClass(1)" type="button">On-Q</button>
-      <button @click="modeOption(2)" :class="getModeClass(2)" type="button">On-Whel</button>
-    </div>
-
-    <div class="section-title">键盘模式</div>
-    <div class="btn-row">
-      <button @click="endPointOption(0)" :class="getEndpointClass(0)" type="button">Ste</button>
-      <button @click="endPointOption(1)" :class="getEndpointClass(1)" type="button">Dym</button>
-      <button @click="endPointOption(2)" :class="getEndpointClass(2)" type="button">Wde</button>
-      <button @click="endPointOption(3)" :class="getEndpointClass(3)" type="button">Ato</button>
-      <button @click="endPointOption(4)" :class="getEndpointClass(4)" type="button">Atw</button>
-      <button @click="endPointOption(5)" :class="getEndpointClass(5)" type="button">Man</button>
+      <div class="section-title-sm">键盘模式</div>
+      <div class="btn-row">
+        <button @click="endPointOption(0)" :class="getEndpointClass(0)" type="button">Ste</button>
+        <button @click="endPointOption(1)" :class="getEndpointClass(1)" type="button">Dym</button>
+        <button @click="endPointOption(2)" :class="getEndpointClass(2)" type="button">Wde</button>
+        <button @click="endPointOption(3)" :class="getEndpointClass(3)" type="button">Ato</button>
+        <button @click="endPointOption(4)" :class="getEndpointClass(4)" type="button">Atw</button>
+        <button @click="endPointOption(5)" :class="getEndpointClass(5)" type="button">Man</button>
+      </div>
     </div>
   </div>
 </template>
@@ -101,12 +105,27 @@ import ws from '../../store/ws.js'
 export default {
   name: 'IndexPage',
   data() {
-    return { ws: ws };
+    return { ws: ws, showBottom: true, lastScrollY: 0 };
   },
   mounted() {
     ws.reconnect();
+    window.addEventListener('scroll', this.handleScroll, { passive: true });
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
   },
   methods: {
+    handleScroll() {
+      const y = window.scrollY || window.pageYOffset || 0;
+      if (y <= 0) {
+        this.showBottom = true;
+      } else if (y > this.lastScrollY + 4) {
+        this.showBottom = false;
+      } else if (y < this.lastScrollY - 4) {
+        this.showBottom = true;
+      }
+      this.lastScrollY = y;
+    },
     onSliderChange(field, event) {
       const value = Number(event.target.value);
       ws.state[field] = value;
@@ -158,7 +177,7 @@ export default {
 .page {
   display: flex;
   flex-direction: column;
-  padding: 12px;
+  padding: 12px 12px 220px 12px;
   gap: 10px;
 }
 
@@ -292,25 +311,68 @@ export default {
   letter-spacing: 0.5px;
 }
 
-.slider-group {
+.sliders-panel {
+  background-color: #1c1c1e;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 10px 12px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 6px 4px 2px 4px;
+  gap: 4px;
 }
 
-.slider-label {
-  font-size: 14px;
-  margin: 0 0 2px 4px;
+.slider-row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+}
+
+.slider-row .slider-label {
+  font-size: 13px;
   color: #ddd;
   font-weight: 600;
+  margin: 4px 0 2px 4px;
 }
 
-.slider {
+.slider-row .slider {
   width: 100%;
   height: 28px;
   accent-color: #3cc51f;
   margin: 0;
+}
+
+.section-title-sm {
+  font-size: 13px;
+  font-weight: 700;
+  color: #bbb;
+  margin: 8px 0 6px 4px;
+  padding-left: 4px;
+  letter-spacing: 0.5px;
+}
+
+.bottom-bar {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #141416;
+  border-top: 1px solid #2a2a2a;
+  padding: 8px 14px 12px 14px;
+  z-index: 20;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.3);
+}
+
+.bottom-bar-visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.bottom-bar-hidden {
+  transform: translateY(100%);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .btn-row {
