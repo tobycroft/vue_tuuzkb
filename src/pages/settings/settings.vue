@@ -1,5 +1,19 @@
 <template>
   <div class="page">
+    <div class="section-title">设备信息</div>
+    <div class="compact-info">
+      <span><small>VID</small>{{ ws.state.vid || '—' }}</span>
+      <span><small>PID</small>{{ ws.state.pid || '—' }}</span>
+      <span><small>Baud</small>{{ ws.state.baud || '—' }}</span>
+    </div>
+    <div class="compact-lcd">
+      <span class="lcd-label-sm">LCD1</span>
+      <span class="lcd-text-sm">{{ ws.state.LCD1 }}</span>
+      <span class="lcd-divider">|</span>
+      <span class="lcd-label-sm">LCD2</span>
+      <span class="lcd-text-sm">{{ ws.state.LCD2 }}</span>
+    </div>
+
     <div class="section-title">屏蔽控制</div>
     <div class="btn-row">
       <button @click="cmd('setting_reset')" type="button">重置</button>
@@ -129,6 +143,65 @@ export default {
   flex-direction: column;
   padding: 12px;
   gap: 8px;
+}
+
+.compact-info {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  color: #e0e0e0;
+  background-color: #2c2c2e;
+  border: 1px solid #3a3a3c;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.compact-info span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.compact-info small {
+  color: #888;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.compact-lcd {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  flex-wrap: nowrap;
+}
+
+.lcd-label-sm {
+  font-size: 13px;
+  font-weight: 700;
+  color: #888;
+}
+
+.lcd-divider { color: #444; font-size: 13px; margin: 0 2px; }
+
+.lcd-text-sm {
+  flex: 1;
+  min-width: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  padding: 10px 12px;
+  background-color: #000;
+  color: #7cfc00;
+  border-radius: 6px;
+  white-space: pre;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px solid #1a3a1a;
 }
 
 .section-title {
