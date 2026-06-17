@@ -52,7 +52,9 @@
     <div class="section-title">波特率</div>
     <div class="btn-row">
       <button @click="cmd('reset')" type="button">重启</button>
-      <button @click="cmd('cfgget')" type="button">CFG</button>
+      <button @click="cmd('cfgget')" type="button">获取 cfg</button>
+    </div>
+    <div class="btn-row">
       <button @click="cmd('cfg3k')" type="button">300K</button>
       <button @click="cmd('cfg115k')" type="button">115K</button>
       <button @click="cmd('cfg9k')" type="button">9K</button>
