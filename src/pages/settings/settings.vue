@@ -1,5 +1,9 @@
 <template>
   <div class="page">
+    <div :class="ws.state.connectionClass" class="connection-status">
+      {{ ws.state.connectionMessage }}
+    </div>
+
     <div class="section-title">屏蔽控制</div>
     <div class="btn-row">
       <button @click="cmd('setting_reset')" type="button">重置</button>
@@ -144,6 +148,20 @@ export default {
   padding: 12px;
   gap: 8px;
 }
+
+.connection-status {
+  width: 100%;
+  text-align: center;
+  padding: 14px;
+  color: #fff;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.status-success { background-color: #2d7a2d; }
+.status-progress { background-color: #3a6fa8; }
+.status-failed { background-color: #a83a3a; }
 
 .compact-info {
   display: flex;
