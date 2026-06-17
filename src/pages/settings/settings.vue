@@ -1,19 +1,5 @@
 <template>
   <div class="page">
-    <div class="section-title">设备信息</div>
-    <div class="compact-info">
-      <span><small>VID</small>{{ ws.state.vid || '—' }}</span>
-      <span><small>PID</small>{{ ws.state.pid || '—' }}</span>
-      <span><small>Baud</small>{{ ws.state.baud || '—' }}</span>
-    </div>
-    <div class="compact-lcd">
-      <span class="lcd-label-sm">LCD1</span>
-      <span class="lcd-text-sm">{{ ws.state.LCD1 }}</span>
-      <span class="lcd-divider">|</span>
-      <span class="lcd-label-sm">LCD2</span>
-      <span class="lcd-text-sm">{{ ws.state.LCD2 }}</span>
-    </div>
-
     <div class="section-title">屏蔽控制</div>
     <div class="btn-row">
       <button @click="cmd('setting_reset')" type="button">重置</button>
@@ -31,6 +17,20 @@
         <span class="mask-label">Btn</span>
         <span class="mask-values">{{ ws.formatKeyList(ws.state.MaskButton) }}</span>
       </div>
+    </div>
+
+    <div class="section-title">设备信息</div>
+    <div class="compact-info">
+      <span><small>VID</small>{{ ws.state.vid || '—' }}</span>
+      <span><small>PID</small>{{ ws.state.pid || '—' }}</span>
+      <span><small>Baud</small>{{ ws.state.baud || '—' }}</span>
+    </div>
+    <div class="compact-lcd">
+      <span class="lcd-label-sm">LCD1</span>
+      <span class="lcd-text-sm">{{ ws.state.LCD1 }}</span>
+      <span class="lcd-divider">|</span>
+      <span class="lcd-label-sm">LCD2</span>
+      <span class="lcd-text-sm">{{ ws.state.LCD2 }}</span>
     </div>
 
     <div class="section-title">系统配置</div>
