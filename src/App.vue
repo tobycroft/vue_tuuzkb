@@ -6,7 +6,7 @@
       </keep-alive>
     </router-view>
 
-    <nav class="tab-bar">
+    <nav :class="['tab-bar', showTab ? 'tab-bar-visible' : 'tab-bar-hidden']">
       <router-link to="/" class="tab-item" active-class="tab-item-active">
         <span class="tab-icon">◉</span>
         <span>首页</span>
@@ -25,7 +25,29 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  data() {
+    return { showTab: true, lastScrollY: 0 };
+  },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll, { passive: true });
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  },
+  methods: {
+    handleScroll() {
+      const y = window.scrollY || window.pageYOffset || 0;
+      if (y <= 0) {
+        this.showTab = true;
+      } else if (y > this.lastScrollY + 6) {
+        this.showTab = false;
+      } else if (y < this.lastScrollY - 6) {
+        this.showTab = true;
+      }
+      this.lastScrollY = y;
+    }
+  }
 }
 </script>
 
@@ -66,6 +88,16 @@ body {
   border-top: 1px solid #2a2a2a;
   z-index: 100;
   padding: 10px 0 14px 0;
+  transition: transform 0.25s ease;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.35);
+}
+
+.tab-bar-visible {
+  transform: translateY(0);
+}
+
+.tab-bar-hidden {
+  transform: translateY(100%);
 }
 
 .tab-item {

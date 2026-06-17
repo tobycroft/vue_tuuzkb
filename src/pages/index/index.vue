@@ -78,7 +78,7 @@
       </div>
     </div>
 
-    <div :class="['bottom-bar', showBottom ? 'bottom-bar-visible' : 'bottom-bar-hidden']">
+    <div class="bottom-bar">
       <div class="section-title-sm">触发模式</div>
       <div class="btn-row">
         <button @click="modeOption(0)" :class="getModeClass(0)" type="button">关闭</button>
@@ -105,27 +105,12 @@ import ws from '../../store/ws.js'
 export default {
   name: 'IndexPage',
   data() {
-    return { ws: ws, showBottom: true, lastScrollY: 0 };
+    return { ws: ws };
   },
   mounted() {
     ws.reconnect();
-    window.addEventListener('scroll', this.handleScroll, { passive: true });
-  },
-  beforeUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
   },
   methods: {
-    handleScroll() {
-      const y = window.scrollY || window.pageYOffset || 0;
-      if (y <= 0) {
-        this.showBottom = true;
-      } else if (y > this.lastScrollY + 4) {
-        this.showBottom = false;
-      } else if (y < this.lastScrollY - 4) {
-        this.showBottom = true;
-      }
-      this.lastScrollY = y;
-    },
     onSliderChange(field, event) {
       const value = Number(event.target.value);
       ws.state[field] = value;
@@ -177,7 +162,7 @@ export default {
 .page {
   display: flex;
   flex-direction: column;
-  padding: 12px 12px 220px 12px;
+  padding: 12px;
   gap: 10px;
 }
 
@@ -356,27 +341,10 @@ export default {
 }
 
 .bottom-bar {
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: #141416;
-  border-top: 1px solid #2a2a2a;
-  padding: 8px 14px 12px 14px;
-  z-index: 20;
-  transition: transform 0.25s ease, opacity 0.2s ease;
-  box-shadow: 0 -4px 12px rgba(0,0,0,0.3);
-}
-
-.bottom-bar-visible {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-.bottom-bar-hidden {
-  transform: translateY(100%);
-  opacity: 0;
-  pointer-events: none;
+  background-color: #1c1c1e;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 10px 14px;
 }
 
 .btn-row {
