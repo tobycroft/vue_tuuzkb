@@ -9,6 +9,14 @@
 
       <div class="form-group">
         <div class="radio-group">
+          <span>当前输出:{{ currentOutput }}</span>
+        </div>
+        <div class="radio-group">
+          <button @click="switchOutput('A')" :class="getOutputClass('A')" type="button">输出 A (10.0.0.90)</button>
+          <button @click="switchOutput('B')" :class="getOutputClass('B')" type="button">输出 B (10.0.0.92)</button>
+        </div>
+        <hr />
+        <div class="radio-group">
           <span>不息屏:{{ wake }}</span>
           <span>PID:{{ pid }}</span>
           <span>VID:{{ vid }}</span>
@@ -167,6 +175,7 @@ export default {
       kbmode: 0,
       kbcfg: 0,
       heartbeatTimer: null,
+      currentOutput: '',
     };
   },
   mounted() {
@@ -335,6 +344,19 @@ export default {
     },
     getKbCfgClass(option) {
       return this.kbcfg === option ? 'option-selected' : 'option';
+    },
+    switchOutput(name) {
+      this.currentOutput = name;
+      if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+        this.socket.send(JSON.stringify({
+          route: "semi-config",
+          type: "switch_output",
+          'data': { name: name },
+        }));
+      }
+    },
+    getOutputClass(name) {
+      return this.currentOutput === name ? 'option-selected' : 'option';
     },
     setWakeLock() {
       if (this.wakeLock) {
