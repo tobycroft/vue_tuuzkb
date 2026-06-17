@@ -237,6 +237,10 @@ export default {
   border-color: #4a4a4c;
 }
 
+.output-row button:active {
+  background-color: #4a4a4c;
+}
+
 .output-row .option-selected {
   background-color: #3cc51f;
   color: #fff;
