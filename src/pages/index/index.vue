@@ -4,16 +4,17 @@
       {{ ws.state.connectionMessage }}
     </div>
 
-    <div class="output-row">
-      <button @click="switchOutput('A')" :class="getOutputClass('A')" type="button">输出 A</button>
-      <button @click="switchOutput('B')" :class="getOutputClass('B')" type="button">输出 B</button>
-    </div>
-
     <div class="info-panel">
-      <div class="compact-info">
-        <span><small>VID</small>{{ ws.state.vid || '—' }}</span>
-        <span><small>PID</small>{{ ws.state.pid || '—' }}</span>
-        <span><small>Baud</small>{{ ws.state.baud || '—' }}</span>
+      <div class="row-2col">
+        <div class="output-row">
+          <button @click="switchOutput('A')" :class="getOutputClass('A')" type="button">输出 A</button>
+          <button @click="switchOutput('B')" :class="getOutputClass('B')" type="button">输出 B</button>
+        </div>
+        <div class="compact-info">
+          <span><small>VID</small>{{ ws.state.vid || '—' }}</span>
+          <span><small>PID</small>{{ ws.state.pid || '—' }}</span>
+          <span><small>Baud</small>{{ ws.state.baud || '—' }}</span>
+        </div>
       </div>
       <div class="compact-lcd">
         <span class="lcd-label-sm">LCD1</span>
@@ -182,6 +183,15 @@ export default {
   padding: 12px 14px;
 }
 
+.row-2col {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  margin-bottom: 10px;
+}
+
+.row-2col > * { flex: 1; }
+
 .output-row {
   display: flex;
   gap: 6px;
@@ -192,11 +202,11 @@ export default {
 .output-row button {
   flex: 1;
   min-width: 0;
-  padding: 16px 8px;
+  padding: 14px 8px;
   background-color: #2c2c2e;
   border: 1px solid #3a3a3c;
   border-radius: 10px;
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 700;
   color: #ddd;
   cursor: pointer;
@@ -286,18 +296,19 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  padding: 6px 4px 2px 4px;
 }
 
 .slider-label {
-  font-size: 15px;
-  margin: 4px 0 6px 4px;
+  font-size: 14px;
+  margin: 0 0 2px 4px;
   color: #ddd;
   font-weight: 600;
 }
 
 .slider {
   width: 100%;
-  height: 48px;
+  height: 28px;
   accent-color: #3cc51f;
   margin: 0;
 }
