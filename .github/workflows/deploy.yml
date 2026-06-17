@@ -31,7 +31,7 @@ jobs:
       - name: Deploy to fe_tuuzkb
         uses: peaceiris/actions-gh-pages@v4
         with:
-          deploy_key: ${{ secrets.DEPLOY_KEY }}
+          deploy_key: ${{ secrets.GH_PAT }}
           external_repository: TuuzNet/fe_tuuzkb
           publish_dir: ./dist
           publish_branch: master
