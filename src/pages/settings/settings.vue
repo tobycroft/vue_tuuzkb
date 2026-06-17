@@ -11,11 +11,11 @@
       <div class="mask-title">屏蔽状态</div>
       <div class="mask-row" v-if="ws.state.MaskCtrl && ws.state.MaskCtrl.length > 0">
         <span class="mask-label">Ctrl</span>
-        <span class="mask-values">{{ formatHexList(ws.state.MaskCtrl) }}</span>
+        <span class="mask-values">{{ ws.formatCtrlList(ws.state.MaskCtrl) }}</span>
       </div>
       <div class="mask-row" v-if="ws.state.MaskButton && ws.state.MaskButton.length > 0">
         <span class="mask-label">Btn</span>
-        <span class="mask-values">{{ formatHexList(ws.state.MaskButton) }}</span>
+        <span class="mask-values">{{ ws.formatKeyList(ws.state.MaskButton) }}</span>
       </div>
     </div>
 
@@ -118,10 +118,6 @@ export default {
     },
     getKbCfgClass(option) {
       return ws.state.kbcfg === option ? 'option-selected' : '';
-    },
-    formatHexList(arr) {
-      if (!arr || arr.length === 0) return '—';
-      return arr.map(v => v.length === 1 ? '0' + v.toUpperCase() : v.toUpperCase()).join(', ');
     }
   }
 };
