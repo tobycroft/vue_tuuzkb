@@ -24,12 +24,15 @@
 </template>
 
 <script>
+import ws from './store/ws.js'
+
 export default {
   name: 'App',
   data() {
     return { showTab: true, lastScrollY: 0 };
   },
   mounted() {
+    ws.reconnect();
     window.addEventListener('scroll', this.handleScroll, { passive: true });
   },
   beforeUnmount() {

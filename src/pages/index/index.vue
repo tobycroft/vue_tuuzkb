@@ -107,9 +107,6 @@ export default {
   data() {
     return { ws: ws };
   },
-  mounted() {
-    ws.reconnect();
-  },
   methods: {
     onSliderChange(field, event) {
       const value = Number(event.target.value);
