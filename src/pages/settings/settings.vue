@@ -36,15 +36,33 @@ export default {
     }
   },
   methods: {
+    resolveWsAddress(value) {
+      const trimmed = value.trim();
+      if (!trimmed) return "";
+
+      if (trimmed.includes("://")) {
+        return trimmed;
+      }
+
+      if (trimmed.startsWith("/")) {
+        const { protocol, host } = window.location;
+        const wsProtocol = protocol === "https:" ? "wss:" : "ws:";
+        return `${wsProtocol}//${host}${trimmed}`;
+      }
+
+      return `ws://${trimmed}`;
+    },
     setConfiguration() {
       if (this.ipAddress === "") {
         alert("请输入有效的 IP 地址和端口号");
         return;
       }
 
-      localStorage.setItem("config_ip", this.ipAddress);
+      const resolvedIp = this.resolveWsAddress(this.ipAddress);
+      localStorage.setItem("config_ip", resolvedIp);
       localStorage.setItem("config_port", this.port);
 
+      this.ipAddress = resolvedIp;
       alert("设置已保存");
     }
   }
