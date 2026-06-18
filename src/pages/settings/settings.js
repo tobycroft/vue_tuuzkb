@@ -3,7 +3,7 @@ import ws from '../../store/ws.js'
 export default {
   name: 'HardwarePage',
   data() {
-    return { ws: ws, pidInput: '05ac', vidInput: '0256' };
+    return { ws: ws, vidInput: '05ac', pidInput: '0256' };
   },
   methods: {
     cmd(type) {

@@ -62,10 +62,10 @@
     <div class="btn-row">
       <button @click="cmd('setusb')" type="button">USBStr</button>
     </div>
-    <div class="section-title">PID / VID</div>
+    <div class="section-title">VID / PID</div>
     <div class="pidvid-row">
-      <input v-model="pidInput" class="pidvid-input" placeholder="PID (如 05ac)" />
-      <input v-model="vidInput" class="pidvid-input" placeholder="VID (如 0256)" />
+      <input v-model="vidInput" class="pidvid-input" placeholder="VID (如 05ac)" />
+      <input v-model="pidInput" class="pidvid-input" placeholder="PID (如 0256)" />
       <button @click="setPidVid" type="button">设置</button>
     </div>
 
