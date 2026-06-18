@@ -60,9 +60,14 @@
       <button @click="cmd('cfg9k')" type="button">9K</button>
     </div>
     <div class="btn-row">
-      <button @click="cmd('05ac')" type="button">Def115</button>
       <button @click="cmd('alldef9k')" type="button">Def9k</button>
-      <button @click="cmd('setusb')" type="button">USB</button>
+      <button @click="cmd('setusb')" type="button">USBStr</button>
+    </div>
+    <div class="section-title">PID / VID</div>
+    <div class="pidvid-row">
+      <input v-model="pidInput" class="pidvid-input" placeholder="PID (如 05ac)" />
+      <input v-model="vidInput" class="pidvid-input" placeholder="VID (如 0256)" />
+      <button @click="setPidVid" type="button">设置</button>
     </div>
 
     <div class="section-title">键盘模式（M）</div>
@@ -88,11 +93,30 @@ import ws from '../../store/ws.js'
 export default {
   name: 'HardwarePage',
   data() {
-    return { ws: ws };
+    return { ws: ws, pidInput: '', vidInput: '' };
   },
   methods: {
     cmd(type) {
       ws.cmdFunc(type);
+    },
+    setPidVid() {
+      const pidStr = (this.pidInput || '').trim().toLowerCase();
+      const vidStr = (this.vidInput || '').trim().toLowerCase();
+      if (!pidStr || !vidStr) {
+        alert('请输入 PID 和 VID');
+        return;
+      }
+      let pid = parseInt(pidStr, 16);
+      let vid = parseInt(vidStr, 16);
+      if (isNaN(pid) || isNaN(vid)) {
+        alert('PID 和 VID 必须是十六进制数字');
+        return;
+      }
+      ws.sendMessage({
+        route: 'kbd',
+        type: 'pidvid',
+        data: { pid: pid, vid: vid }
+      });
     },
     getSnapshot() {
       const s = ws.state;
@@ -328,5 +352,52 @@ export default {
   font-weight: 600;
   line-height: 1.5;
   word-break: break-all;
+}
+
+.pidvid-row {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+}
+
+.pidvid-input {
+  flex: 1;
+  min-width: 0;
+  padding: 14px 10px;
+  background-color: #2c2c2e;
+  border: 1px solid #3a3a3c;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #ddd;
+  font-family: 'Courier New', monospace;
+  text-align: center;
+}
+
+.pidvid-input:focus {
+  outline: none;
+  border-color: #3cc51f;
+}
+
+.pidvid-row button {
+  flex: 0.8;
+  min-width: 0;
+  padding: 14px 8px;
+  background-color: #2c2c2e;
+  border: 1px solid #3a3a3c;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  color: #ddd;
+}
+
+.pidvid-row button:hover {
+  background-color: #3a3a3c;
+  border-color: #4a4a4c;
+}
+
+.pidvid-row button:active {
+  background-color: #4a4a4c;
 }
 </style>
