@@ -16,13 +16,6 @@
           <span><small>Baud</small>{{ ws.state.baud || '—' }}</span>
         </div>
       </div>
-      <div class="compact-lcd">
-        <span class="lcd-label-sm">LCD1</span>
-        <span class="lcd-text-sm">{{ ws.state.LCD1 }}</span>
-        <span class="lcd-divider">|</span>
-        <span class="lcd-label-sm">LCD2</span>
-        <span class="lcd-text-sm">{{ ws.state.LCD2 }}</span>
-      </div>
     </div>
 
     <div class="mask-panel" v-if="(ws.state.MaskCtrl && ws.state.MaskCtrl.length > 0) || (ws.state.MaskButton && ws.state.MaskButton.length > 0)">
