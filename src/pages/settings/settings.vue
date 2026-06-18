@@ -60,7 +60,6 @@
       <button @click="cmd('cfg9k')" type="button">9K</button>
     </div>
     <div class="btn-row">
-      <button @click="cmd('alldef9k')" type="button">Def9k</button>
       <button @click="cmd('setusb')" type="button">USBStr</button>
     </div>
     <div class="section-title">PID / VID</div>
