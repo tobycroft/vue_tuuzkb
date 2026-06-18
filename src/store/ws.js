@@ -98,6 +98,7 @@ const state = reactive({
   Mode: 0,
   kbmode: 0,
   kbcfg: 0,
+  macmode: false,
   currentOutput: '',
   wakeLock: null,
   heartbeatTimer: null,

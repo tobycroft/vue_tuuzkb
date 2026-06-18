@@ -142,6 +142,12 @@
   border-color: #3cc51f;
 }
 
+.btn-row .option-dim {
+  background-color: #2c2c2e;
+  color: #666;
+  border-color: #3a3a3c;
+}
+
 .mask-panel {
   background-color: #1c1c1e;
   border: 1px solid #5a2a2a;
