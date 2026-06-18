@@ -102,7 +102,7 @@ import ws from '../../store/ws.js'
 export default {
   name: 'IndexPage',
   data() {
-    return { ws: ws };
+    return { ws: ws, cfggetTimer: null };
   },
   methods: {
     onSliderChange(field, event) {
@@ -144,7 +144,13 @@ export default {
         type: "switch_output",
         data: { name: name }
       });
-      ws.cmdFunc('cfgget');
+      if (this.cfggetTimer) {
+        clearTimeout(this.cfggetTimer);
+      }
+      this.cfggetTimer = setTimeout(() => {
+        ws.cmdFunc('cfgget');
+        this.cfggetTimer = null;
+      }, 1000);
     },
     getOutputClass(name) {
       return ws.state.currentOutput === name ? 'option-selected' : '';
