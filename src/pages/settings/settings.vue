@@ -9,6 +9,9 @@
       <button @click="cmd('bankey')" type="button">屏蔽键</button>
       <button @click="cmd('unbanall')" type="button">解除屏蔽</button>
     </div>
+    <div class="btn-row">
+      <button @click="cmd('toggle_macmode')" type="button">切换 Mac / Win 模式</button>
+    </div>
 
     <div class="mask-panel" v-if="(ws.state.MaskCtrl && ws.state.MaskCtrl.length > 0) || (ws.state.MaskButton && ws.state.MaskButton.length > 0)">
       <div class="mask-title">屏蔽状态</div>
