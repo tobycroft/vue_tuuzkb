@@ -3,27 +3,9 @@ import ws from '../../store/ws.js'
 export default {
   name: 'HardwarePage',
   data() {
-    return { ws: ws, pidInput: '', vidInput: '' };
-  },
-  watch: {
-    pid: { handler() { this.syncPid(); }, immediate: true },
-    vid: { handler() { this.syncVid(); }, immediate: true }
-  },
-  computed: {
-    pid() { return this.ws.state.pid; },
-    vid() { return this.ws.state.vid; }
+    return { ws: ws, pidInput: '05ac', vidInput: '0256' };
   },
   methods: {
-    syncPid() {
-      if (this.pidInput === '' && typeof this.ws.state.pid === 'number' && this.ws.state.pid > 0) {
-        this.pidInput = this.ws.state.pid.toString(16).padStart(4, '0');
-      }
-    },
-    syncVid() {
-      if (this.vidInput === '' && typeof this.ws.state.vid === 'number' && this.ws.state.vid > 0) {
-        this.vidInput = this.ws.state.vid.toString(16).padStart(4, '0');
-      }
-    },
     cmd(type) {
       ws.cmdFunc(type);
     },
