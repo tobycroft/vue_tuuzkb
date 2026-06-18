@@ -8,10 +8,7 @@
     <div class="btn-row">
       <button @click="cmd('bankey')" type="button">屏蔽键</button>
       <button @click="cmd('unbanall')" type="button">解除屏蔽</button>
-    </div>
-    <div class="btn-row">
-      <button @click="cmd('toggle_macmode')" :class="ws.state.macmode ? 'option-selected' : 'option-dim'" type="button">Mac 模式</button>
-      <button @click="cmd('toggle_macmode')" :class="!ws.state.macmode ? 'option-selected' : 'option-dim'" type="button">Win 模式</button>
+      <button @click="cmd('toggle_macmode')" :class="ws.state.macmode ? 'option-selected' : 'option-dim'" type="button">Mac</button>
     </div>
 
     <div class="mask-panel" v-if="(ws.state.MaskCtrl && ws.state.MaskCtrl.length > 0) || (ws.state.MaskButton && ws.state.MaskButton.length > 0)">
