@@ -6,18 +6,24 @@ export default {
     return { ws: ws, pidInput: '', vidInput: '' };
   },
   watch: {
-    'ws.state.pid'(v) {
-      if (this.pidInput === '' && typeof v === 'number' && v > 0) {
-        this.pidInput = v.toString(16).padStart(4, '0');
-      }
-    },
-    'ws.state.vid'(v) {
-      if (this.vidInput === '' && typeof v === 'number' && v > 0) {
-        this.vidInput = v.toString(16).padStart(4, '0');
-      }
-    }
+    pid: { handler() { this.syncPid(); }, immediate: true },
+    vid: { handler() { this.syncVid(); }, immediate: true }
+  },
+  computed: {
+    pid() { return this.ws.state.pid; },
+    vid() { return this.ws.state.vid; }
   },
   methods: {
+    syncPid() {
+      if (this.pidInput === '' && typeof this.ws.state.pid === 'number' && this.ws.state.pid > 0) {
+        this.pidInput = this.ws.state.pid.toString(16).padStart(4, '0');
+      }
+    },
+    syncVid() {
+      if (this.vidInput === '' && typeof this.ws.state.vid === 'number' && this.ws.state.vid > 0) {
+        this.vidInput = this.ws.state.vid.toString(16).padStart(4, '0');
+      }
+    },
     cmd(type) {
       ws.cmdFunc(type);
     },
