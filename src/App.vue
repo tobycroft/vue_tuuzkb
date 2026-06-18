@@ -57,10 +57,17 @@ body {
 
 .app-root {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background-color: #0d0d0d;
 }
 
+.app-root > :first-child {
+  flex: 1 0 auto;
+}
+
 .tab-bar {
+  flex-shrink: 0;
   display: flex;
   background-color: #1c1c1e;
   border-top: 1px solid #2a2a2a;
