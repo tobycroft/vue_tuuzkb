@@ -223,10 +223,15 @@ export default {
   background-color: #4a4a4c;
 }
 
-.output-row .option-selected {
+.output-row button.option-selected {
   background-color: #3cc51f;
   color: #fff;
   border-color: #3cc51f;
+}
+
+.output-row button.option-selected:hover {
+  background-color: #4dd63a;
+  border-color: #4dd63a;
 }
 
 .compact-info {
@@ -379,10 +384,15 @@ export default {
   background-color: #4a4a4c;
 }
 
-.btn-row .option-selected {
+.btn-row button.option-selected {
   background-color: #3cc51f;
   color: #fff;
   border-color: #3cc51f;
+}
+
+.btn-row button.option-selected:hover {
+  background-color: #4dd63a;
+  border-color: #4dd63a;
 }
 
 .mask-panel {
