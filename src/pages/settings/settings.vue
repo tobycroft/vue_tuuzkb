@@ -92,7 +92,19 @@ import ws from '../../store/ws.js'
 export default {
   name: 'HardwarePage',
   data() {
-    return { ws: ws, pidInput: '05ac', vidInput: '0256' };
+    return { ws: ws, pidInput: '', vidInput: '' };
+  },
+  watch: {
+    'ws.state.pid'(newVal) {
+      if ((this.pidInput === '' || this.pidInput === '0000') && newVal && newVal !== 0 && newVal !== '') {
+        this.pidInput = Number(newVal).toString(16).padStart(4, '0');
+      }
+    },
+    'ws.state.vid'(newVal) {
+      if ((this.vidInput === '' || this.vidInput === '0000') && newVal && newVal !== 0 && newVal !== '') {
+        this.vidInput = Number(newVal).toString(16).padStart(4, '0');
+      }
+    }
   },
   methods: {
     cmd(type) {
