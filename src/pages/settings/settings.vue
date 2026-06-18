@@ -92,7 +92,7 @@ import ws from '../../store/ws.js'
 export default {
   name: 'HardwarePage',
   data() {
-    return { ws: ws, pidInput: '', vidInput: '' };
+    return { ws: ws, pidInput: '05ac', vidInput: '0256' };
   },
   methods: {
     cmd(type) {
