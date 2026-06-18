@@ -27,13 +27,17 @@
 
     <div class="mask-panel" v-if="(ws.state.MaskCtrl && ws.state.MaskCtrl.length > 0) || (ws.state.MaskButton && ws.state.MaskButton.length > 0)">
       <div class="mask-title">屏蔽状态</div>
-      <div class="mask-row" v-if="ws.state.MaskCtrl && ws.state.MaskCtrl.length > 0">
-        <span class="mask-label">Ctrl</span>
-        <span class="mask-values">{{ ws.formatCtrlList(ws.state.MaskCtrl) }}</span>
+      <div class="mask-group" v-if="ws.state.MaskCtrl && ws.state.MaskCtrl.length > 0">
+        <div class="mask-card" v-for="item in ws.parseCtrlList(ws.state.MaskCtrl)" :key="item.hex">
+          <span class="mask-card-name">{{ item.name }}</span>
+          <span class="mask-card-hex">{{ item.hex }}</span>
+        </div>
       </div>
-      <div class="mask-row" v-if="ws.state.MaskButton && ws.state.MaskButton.length > 0">
-        <span class="mask-label">Btn</span>
-        <span class="mask-values">{{ ws.formatKeyList(ws.state.MaskButton) }}</span>
+      <div class="mask-group" v-if="ws.state.MaskButton && ws.state.MaskButton.length > 0">
+        <div class="mask-card" v-for="item in ws.parseKeyList(ws.state.MaskButton)" :key="item.hex">
+          <span class="mask-card-name">{{ item.name }}</span>
+          <span class="mask-card-hex">{{ item.hex }}</span>
+        </div>
       </div>
     </div>
 
@@ -411,29 +415,40 @@ export default {
   letter-spacing: 0.5px;
 }
 
-.mask-row {
+.mask-group {
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 4px 0;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 6px;
 }
 
-.mask-label {
-  flex-shrink: 0;
-  width: 44px;
-  font-size: 13px;
+.mask-group:last-child {
+  margin-bottom: 0;
+}
+
+.mask-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 10px;
+  background-color: #2c2c2e;
+  border: 1px solid #5a3a3a;
+  border-radius: 8px;
+  min-width: 52px;
+}
+
+.mask-card-name {
+  font-size: 12px;
   font-weight: 700;
-  color: #aaa;
-  padding-top: 2px;
+  color: #ffc9c9;
+  white-space: nowrap;
 }
 
-.mask-values {
-  flex: 1;
+.mask-card-hex {
   font-family: 'Courier New', monospace;
-  font-size: 13px;
-  color: #ffc9c9;
+  font-size: 11px;
   font-weight: 600;
-  line-height: 1.5;
-  word-break: break-all;
+  color: #888;
 }
 </style>

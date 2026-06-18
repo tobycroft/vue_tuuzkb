@@ -57,6 +57,24 @@ function decodeModifierByte(hexCode) {
   return null
 }
 
+export function parseCtrlList(arr) {
+  if (!arr || arr.length === 0) return []
+  return arr.map(c => {
+    const decoded = decodeModifierByte(c)
+    const hex = c.toUpperCase().padStart(2, '0')
+    return { name: decoded || hex, hex: hex }
+  })
+}
+
+export function parseKeyList(arr) {
+  if (!arr || arr.length === 0) return []
+  return arr.map(c => {
+    const name = getKeyName(c)
+    const hex = c.toUpperCase().padStart(2, '0')
+    return { name: name, hex: hex }
+  })
+}
+
 export function formatCtrlList(arr) {
   if (!arr || arr.length === 0) return ''
   return arr.map(c => {
@@ -262,5 +280,7 @@ export default {
   getKeyName,
   formatMaskList,
   formatCtrlList,
-  formatKeyList
+  formatKeyList,
+  parseCtrlList,
+  parseKeyList
 }
