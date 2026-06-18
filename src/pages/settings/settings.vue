@@ -99,14 +99,14 @@ export default {
     return { ws: ws, pidInput: '', vidInput: '' };
   },
   watch: {
-    'ws.state.pid'(newVal) {
-      if ((this.pidInput === '' || this.pidInput === '0000') && newVal && newVal !== 0 && newVal !== '') {
-        this.pidInput = Number(newVal).toString(16).padStart(4, '0');
+    'ws.state.pid'(v) {
+      if (this.pidInput === '' && typeof v === 'number' && v > 0) {
+        this.pidInput = v.toString(16).padStart(4, '0');
       }
     },
-    'ws.state.vid'(newVal) {
-      if ((this.vidInput === '' || this.vidInput === '0000') && newVal && newVal !== 0 && newVal !== '') {
-        this.vidInput = Number(newVal).toString(16).padStart(4, '0');
+    'ws.state.vid'(v) {
+      if (this.vidInput === '' && typeof v === 'number' && v > 0) {
+        this.vidInput = v.toString(16).padStart(4, '0');
       }
     }
   },
@@ -121,8 +121,8 @@ export default {
         alert('请输入 PID 和 VID');
         return;
       }
-      let pid = parseInt(pidStr, 16);
-      let vid = parseInt(vidStr, 16);
+      const pid = parseInt(pidStr, 16);
+      const vid = parseInt(vidStr, 16);
       if (isNaN(pid) || isNaN(vid)) {
         alert('PID 和 VID 必须是十六进制数字');
         return;
