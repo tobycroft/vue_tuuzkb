@@ -6,7 +6,6 @@
 
     <div class="section-title">屏蔽控制</div>
     <div class="btn-row">
-      <button @click="cmd('setting_reset')" type="button">重置</button>
       <button @click="cmd('bankey')" type="button">屏蔽键</button>
       <button @click="cmd('unbanall')" type="button">解除屏蔽</button>
     </div>
@@ -82,6 +81,11 @@
       <button @click="kbCfgOption(0)" :class="getKbCfgClass(0)" type="button">Norm</button>
       <button @click="kbCfgOption(1)" :class="getKbCfgClass(1)" type="button">ASCII</button>
       <button @click="kbCfgOption(2)" :class="getKbCfgClass(2)" type="button">Pass</button>
+    </div>
+
+    <div class="section-title">系统</div>
+    <div class="btn-row">
+      <button @click="cmd('setting_reset')" type="button">重置</button>
     </div>
   </div>
 </template>
