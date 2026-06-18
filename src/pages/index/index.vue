@@ -147,6 +147,7 @@ export default {
         type: "switch_output",
         data: { name: name }
       });
+      ws.cmdFunc('cfgget');
     },
     getOutputClass(name) {
       return ws.state.currentOutput === name ? 'option-selected' : '';
