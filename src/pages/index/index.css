@@ -259,6 +259,7 @@
   flex-wrap: wrap;
   gap: 4px;
   margin-bottom: 4px;
+  width: 100%;
 }
 
 .mask-group:last-child {
@@ -278,4 +279,5 @@
   white-space: nowrap;
   line-height: 1.2;
   cursor: default;
+  flex-shrink: 0;
 }
