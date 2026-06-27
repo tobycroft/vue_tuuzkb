@@ -73,21 +73,6 @@
       <button @click="setPidVid" type="button">设置</button>
     </div>
 
-    <div class="section-title">键盘模式（M）</div>
-    <div class="btn-row">
-      <button @click="kbModeOption(0)" :class="getKbModeClass(0)" type="button">M1</button>
-      <button @click="kbModeOption(1)" :class="getKbModeClass(1)" type="button">M2</button>
-      <button @click="kbModeOption(2)" :class="getKbModeClass(2)" type="button">M3</button>
-      <button @click="kbModeOption(3)" :class="getKbModeClass(3)" type="button">M4</button>
-    </div>
-
-    <div class="section-title">键盘编码</div>
-    <div class="btn-row">
-      <button @click="kbCfgOption(0)" :class="getKbCfgClass(0)" type="button">Norm</button>
-      <button @click="kbCfgOption(1)" :class="getKbCfgClass(1)" type="button">ASCII</button>
-      <button @click="kbCfgOption(2)" :class="getKbCfgClass(2)" type="button">Pass</button>
-    </div>
-
     <div class="section-title">系统</div>
     <div class="btn-row">
       <button @click="cmd('setting_reset')" type="button">重置</button>

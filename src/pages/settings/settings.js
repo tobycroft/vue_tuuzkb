@@ -36,8 +36,6 @@ export default {
         Endpoint_delay: s.Endpoint_delay,
         Endpoint_dynamic_mode: s.Endpoint_dynamic_mode,
         Mode: s.Mode,
-        kbmode: s.kbmode,
-        kbcfg: s.kbcfg,
         sep: s.sep
       };
     },
@@ -53,25 +51,9 @@ export default {
           Endpoint_BeforeDelay: ws.state.Endpoint_BeforeDelay,
           Endpoint_delay: ws.state.Endpoint_delay,
           Endpoint_dynamic_mode: ws.state.Endpoint_dynamic_mode,
-          Mode: ws.state.Mode,
-          kbmode: ws.state.kbmode,
-          kbcfg: ws.state.kbcfg
+          Mode: ws.state.Mode
         }
       });
     },
-    kbModeOption(option) {
-      ws.state.kbmode = option;
-      ws.requestSemiConfig('kbmode', this.getSnapshot());
-    },
-    kbCfgOption(option) {
-      ws.state.kbcfg = option;
-      ws.requestSemiConfig('kbcfg', this.getSnapshot());
-    },
-    getKbModeClass(option) {
-      return ws.state.kbmode === option ? 'option-selected' : '';
-    },
-    getKbCfgClass(option) {
-      return ws.state.kbcfg === option ? 'option-selected' : '';
-    }
   }
 };

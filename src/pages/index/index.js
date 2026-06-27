@@ -19,8 +19,6 @@ export default {
         Endpoint_delay: s.Endpoint_delay,
         Endpoint_dynamic_mode: s.Endpoint_dynamic_mode,
         Mode: s.Mode,
-        kbmode: s.kbmode,
-        kbcfg: s.kbcfg,
         sep: s.sep
       };
     },

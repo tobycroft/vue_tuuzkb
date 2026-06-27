@@ -114,8 +114,6 @@ const state = reactive({
   LCD1: '',
   LCD2: '',
   Mode: 0,
-  kbmode: 0,
-  kbcfg: 0,
   macmode: false,
   currentOutput: '',
   currentIP: '',
