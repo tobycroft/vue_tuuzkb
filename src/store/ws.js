@@ -105,7 +105,6 @@ const state = reactive({
   MaskButton: [],
   pid: '',
   vid: '',
-  baud: 0,
   Endpoint_BeforeDelay_Random: 0,
   Endpoint_BeforeDelay: 0,
   Endpoint_delay: 0,

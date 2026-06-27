@@ -31,7 +31,6 @@
     <div class="compact-info">
       <span><small>VID</small>{{ ws.state.vid || '—' }}</span>
       <span><small>PID</small>{{ ws.state.pid || '—' }}</span>
-      <span><small>Baud</small>{{ ws.state.baud || '—' }}</span>
     </div>
     <div class="compact-lcd">
       <span class="lcd-label-sm">LCD1</span>
@@ -53,29 +52,22 @@
         @change="onSepChange($event)"
     />
 
-    <div class="section-title">波特率</div>
+    <div class="section-title">系统</div>
     <div class="btn-row">
       <button @click="cmd('reset')" type="button">重启</button>
       <button @click="cmd('cfgget')" type="button">获取 cfg</button>
+      <button @click="cmd('setting_reset')" type="button">重置</button>
     </div>
-    <div class="btn-row">
-      <button @click="cmd('cfg3k')" type="button">300K</button>
-      <button @click="cmd('cfg115k')" type="button">115K</button>
-      <button @click="cmd('cfg9k')" type="button">9K</button>
-    </div>
+
     <div class="btn-row">
       <button @click="cmd('setusb')" type="button">USBStr</button>
     </div>
+
     <div class="section-title">VID / PID</div>
     <div class="pidvid-row">
       <input v-model="vidInput" class="pidvid-input" placeholder="VID (如 05ac)" />
       <input v-model="pidInput" class="pidvid-input" placeholder="PID (如 0256)" />
       <button @click="setPidVid" type="button">设置</button>
-    </div>
-
-    <div class="section-title">系统</div>
-    <div class="btn-row">
-      <button @click="cmd('setting_reset')" type="button">重置</button>
     </div>
   </div>
 </template>
