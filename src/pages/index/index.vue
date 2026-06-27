@@ -7,8 +7,7 @@
     <div class="info-panel">
       <div class="row-2col">
         <div class="output-row">
-          <button @click="switchOutput('A')" :class="getOutputClass('A')" type="button">输出 A</button>
-          <button @click="switchOutput('B')" :class="getOutputClass('B')" type="button">输出 B</button>
+          <button v-for="dev in ws.state.outputs" :key="dev.name" @click="switchOutput(dev.name)" :class="getOutputClass(dev.name)" type="button">输出 {{ dev.name }}</button>
         </div>
         <div class="compact-info">
           <span><small>VID</small>{{ ws.state.vid || '—' }}</span>

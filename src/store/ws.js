@@ -118,6 +118,8 @@ const state = reactive({
   kbcfg: 0,
   macmode: false,
   currentOutput: '',
+  currentIP: '',
+  outputs: [],
   wakeLock: null,
   heartbeatTimer: null,
   _listeners: new Set()
