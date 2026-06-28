@@ -74,6 +74,7 @@ const state = reactive({
   LCD2: '',
   Mode: 0,
   macmode: false,
+  polling_rate: 1,
   currentOutput: '',
   currentIP: '',
   outputs: [],

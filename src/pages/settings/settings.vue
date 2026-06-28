@@ -35,6 +35,14 @@
     </div>
 
     <div class="section-title">系统配置</div>
+
+    <div class="section-title">回报率</div>
+    <div class="btn-row">
+      <button @click="setPollingRate(1)" :class="getPollingRateClass(1)" type="button">1ms</button>
+      <button @click="setPollingRate(2)" :class="getPollingRateClass(2)" type="button">2ms</button>
+      <button @click="setPollingRate(8)" :class="getPollingRateClass(8)" type="button">8ms</button>
+    </div>
+
     <div class="section-title">系统</div>
     <div class="btn-row">
       <button @click="cmd('reset')" type="button">重启</button>

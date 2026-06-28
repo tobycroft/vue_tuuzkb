@@ -52,6 +52,17 @@ export default {
         Mode: s.Mode
       };
     },
+    setPollingRate(rate) {
+      ws.state.polling_rate = rate;
+      ws.sendMessage({
+        route: 'kbd',
+        type: 'polling_rate',
+        data: { rate: rate }
+      });
+    },
+    getPollingRateClass(rate) {
+      return ws.state.polling_rate === rate ? 'option-selected' : '';
+    },
   },
   watch: {
     'ws.state.manufacturer': {
