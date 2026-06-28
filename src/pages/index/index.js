@@ -18,8 +18,7 @@ export default {
         Endpoint_BeforeDelay: s.Endpoint_BeforeDelay,
         Endpoint_delay: s.Endpoint_delay,
         Endpoint_dynamic_mode: s.Endpoint_dynamic_mode,
-        Mode: s.Mode,
-        sep: s.sep
+        Mode: s.Mode
       };
     },
     modeOption(option) {

@@ -35,17 +35,6 @@
     </div>
 
     <div class="section-title">系统配置</div>
-    <div class="slider-label">系统 Sep: {{ ws.state.sep }}</div>
-    <input
-        type="range"
-        class="slider"
-        :value="ws.state.sep"
-        min="1"
-        max="50"
-        step="1"
-        @change="onSepChange($event)"
-    />
-
     <div class="section-title">系统</div>
     <div class="btn-row">
       <button @click="cmd('reset')" type="button">重启</button>

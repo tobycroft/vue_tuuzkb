@@ -70,7 +70,6 @@ const state = reactive({
   Endpoint_BeforeDelay: 0,
   Endpoint_delay: 0,
   Endpoint_dynamic_mode: 0,
-  sep: 1,
   LCD1: '',
   LCD2: '',
   Mode: 0,

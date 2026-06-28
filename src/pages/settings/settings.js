@@ -49,25 +49,8 @@ export default {
         Endpoint_BeforeDelay: s.Endpoint_BeforeDelay,
         Endpoint_delay: s.Endpoint_delay,
         Endpoint_dynamic_mode: s.Endpoint_dynamic_mode,
-        Mode: s.Mode,
-        sep: s.sep
+        Mode: s.Mode
       };
-    },
-    onSepChange(event) {
-      const value = Number(event.target.value);
-      ws.state.sep = value;
-      ws.sendMessage({
-        route: 'semi-config',
-        type: 'sep',
-        data: {
-          sep: value,
-          Endpoint_BeforeDelay_Random: ws.state.Endpoint_BeforeDelay_Random,
-          Endpoint_BeforeDelay: ws.state.Endpoint_BeforeDelay,
-          Endpoint_delay: ws.state.Endpoint_delay,
-          Endpoint_dynamic_mode: ws.state.Endpoint_dynamic_mode,
-          Mode: ws.state.Mode
-        }
-      });
     },
   },
   watch: {
