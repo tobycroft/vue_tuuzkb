@@ -3,7 +3,7 @@ import ws from '../../store/ws.js'
 export default {
   name: 'HardwarePage',
   data() {
-    return { ws: ws, vidInput: '05ac', pidInput: '0256', mfgrInput: '', prodInput: '', serialInput: '' };
+    return { ws: ws, vidInput: '05ac', pidInput: '0256', mfgrInput: '', prodInput: '', serialInput: '', cfggetTimer: null };
   },
   methods: {
     cmd(type) {
@@ -62,6 +62,24 @@ export default {
     },
     getPollingRateClass(rate) {
       return ws.state.polling_rate === rate ? 'option-selected' : '';
+    },
+    switchOutput(name) {
+      ws.state.currentOutput = name;
+      ws.sendMessage({
+        route: "semi-config",
+        type: "switch_output",
+        data: { name: name }
+      });
+      if (this.cfggetTimer) {
+        clearTimeout(this.cfggetTimer);
+      }
+      this.cfggetTimer = setTimeout(() => {
+        ws.requestInfoCfgGet();
+        this.cfggetTimer = null;
+      }, 1000);
+    },
+    getOutputClass(name) {
+      return ws.state.currentOutput === name ? 'option-selected' : '';
     },
   },
   watch: {

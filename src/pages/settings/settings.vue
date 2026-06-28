@@ -4,6 +4,11 @@
       {{ ws.state.connectionMessage }}
     </div>
 
+    <div class="section-title">输出切换</div>
+    <div class="output-row">
+      <button v-for="dev in ws.state.outputs" :key="dev.name" @click="switchOutput(dev.name)" :class="getOutputClass(dev.name)" type="button">输出 {{ dev.name }}</button>
+    </div>
+
     <div class="section-title">屏蔽控制</div>
     <div class="btn-row">
       <button @click="cmd('bankey')" type="button">屏蔽键</button>
