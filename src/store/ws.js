@@ -78,6 +78,9 @@ const state = reactive({
   currentOutput: '',
   currentIP: '',
   outputs: [],
+  manufacturer: '',
+  product: '',
+  serial: '',
   wakeLock: null,
   heartbeatTimer: null,
   _listeners: new Set()

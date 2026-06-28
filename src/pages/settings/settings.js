@@ -3,7 +3,7 @@ import ws from '../../store/ws.js'
 export default {
   name: 'HardwarePage',
   data() {
-    return { ws: ws, vidInput: '05ac', pidInput: '0256' };
+    return { ws: ws, vidInput: '05ac', pidInput: '0256', mfgrInput: '', prodInput: '', serialInput: '' };
   },
   methods: {
     cmd(type) {
@@ -26,6 +26,20 @@ export default {
         route: 'kbd',
         type: 'pidvid',
         data: { pid: pid, vid: vid }
+      });
+    },
+    setUsbString() {
+      const mfgr = (this.mfgrInput || '').trim();
+      const prod = (this.prodInput || '').trim();
+      const serial = (this.serialInput || '').trim();
+      if (!mfgr && !prod && !serial) {
+        alert('请至少输入一个字段');
+        return;
+      }
+      ws.sendMessage({
+        route: 'kbd',
+        type: 'setusbstr',
+        data: { mfgr: mfgr, prod: prod, serial: serial }
       });
     },
     getSnapshot() {
