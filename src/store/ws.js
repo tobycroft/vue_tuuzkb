@@ -41,7 +41,7 @@ export function parseKeyList(arr) {
   return arr.map(c => {
     const name = getKeyName(c)
     const hex = c.toUpperCase().padStart(2, '0')
-    return { name: name, hex: hex }
+    return { name, hex, display: name === hex ? hex : name + ' (' + hex + ')' }
   })
 }
 

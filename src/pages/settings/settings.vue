@@ -15,8 +15,7 @@
       <div class="mask-title">屏蔽状态</div>
       <div class="mask-group">
         <div class="mask-card" v-for="item in ws.parseKeyList(ws.state.MaskButton)" :key="item.hex">
-          <span class="mask-card-name">{{ item.name }}</span>
-          <span class="mask-card-hex">{{ item.hex }}</span>
+          <span class="mask-card-name">{{ item.display }}</span>
         </div>
       </div>
     </div>

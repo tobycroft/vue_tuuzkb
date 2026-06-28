@@ -20,7 +20,7 @@
     <div class="mask-panel" v-if="ws.state.MaskButton && ws.state.MaskButton.length > 0">
       <div class="mask-title">屏蔽状态</div>
       <div class="mask-group">
-        <span class="mask-tag" v-for="item in ws.parseKeyList(ws.state.MaskButton)" :key="item.hex" :title="item.hex">{{ item.name }}</span>
+        <span class="mask-tag" v-for="item in ws.parseKeyList(ws.state.MaskButton)" :key="item.hex" :title="item.hex">{{ item.display }}</span>
       </div>
     </div>
 
