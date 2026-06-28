@@ -24,6 +24,10 @@
       </div>
     </div>
 
+    <div class="btn-row">
+      <button @click="cmd('toggle_macmode')" :class="ws.state.macmode ? 'option-selected' : 'option-dim'" type="button">Mac</button>
+    </div>
+
     <div class="sliders-panel">
       <div class="slider-row">
         <div class="slider-label">前置震动: {{ ws.state.Endpoint_BeforeDelay_Random }}</div>
@@ -84,9 +88,6 @@
       </div>
     </div>
 
-    <div class="btn-row">
-      <button @click="cmd('toggle_macmode')" :class="ws.state.macmode ? 'option-selected' : 'option-dim'" type="button">Mac</button>
-    </div>
   </div>
 </template>
 
