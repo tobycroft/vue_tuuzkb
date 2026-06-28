@@ -12,6 +12,7 @@
         <div class="compact-info">
           <span><small>VID</small>{{ ws.state.vid || '—' }}</span>
           <span><small>PID</small>{{ ws.state.pid || '—' }}</span>
+          <span><small>Baud</small>{{ ws.state.baud || '—' }}</span>
         </div>
       </div>
     </div>
