@@ -65,15 +65,6 @@
     </div>
 
     <div class="section-title">USB 字符串</div>
-    <div class="compact-info">
-      <span><small>制造商</small>{{ ws.state.manufacturer || '—' }}</span>
-    </div>
-    <div class="compact-info">
-      <span><small>产品</small>{{ ws.state.product || '—' }}</span>
-    </div>
-    <div class="compact-info">
-      <span><small>序列号</small>{{ ws.state.serial || '—' }}</span>
-    </div>
     <div class="pidvid-row">
       <input v-model="mfgrInput" class="pidvid-input" placeholder="制造商" />
       <input v-model="prodInput" class="pidvid-input" placeholder="产品" />
