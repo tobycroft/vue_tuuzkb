@@ -49,7 +49,7 @@
     <div class="section-title">系统</div>
     <div class="btn-row">
       <button @click="cmd('reset')" type="button">重启</button>
-      <button @click="cmd('cfgget')" type="button">获取 cfg</button>
+      <button @click="ws.requestInfoCfgGet()" type="button">获取 cfg</button>
       <button @click="cmd('setting_reset')" type="button">重置</button>
     </div>
 

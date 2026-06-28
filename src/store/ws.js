@@ -177,6 +177,10 @@ export function requestInfo() {
   sendMessage({ route: 'info' })
 }
 
+export function requestInfoCfgGet() {
+  sendMessage({ route: 'infocfgget' })
+}
+
 export function requestSemiConfig(type, allData) {
   sendMessage({ route: 'semi-config', type: type, data: allData })
 }
@@ -233,6 +237,7 @@ export default {
   sendMessage,
   cmdFunc,
   requestInfo,
+  requestInfoCfgGet,
   requestSemiConfig,
   reconnect,
   subscribe,

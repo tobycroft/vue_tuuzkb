@@ -47,7 +47,7 @@ export default {
         clearTimeout(this.cfggetTimer);
       }
       this.cfggetTimer = setTimeout(() => {
-        ws.cmdFunc('cfgget');
+        ws.requestInfoCfgGet();
         this.cfggetTimer = null;
       }, 1000);
     },
