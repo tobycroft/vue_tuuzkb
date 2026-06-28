@@ -83,6 +83,14 @@ export default {
     },
   },
   watch: {
+    'ws.state.vid': {
+      immediate: true,
+      handler(val) { this.vidInput = val || ''; }
+    },
+    'ws.state.pid': {
+      immediate: true,
+      handler(val) { this.pidInput = val || ''; }
+    },
     'ws.state.manufacturer': {
       immediate: true,
       handler(val) { this.mfgrInput = val || ''; }
