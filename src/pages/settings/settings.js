@@ -69,5 +69,19 @@ export default {
         }
       });
     },
+  },
+  watch: {
+    'ws.state.manufacturer': {
+      immediate: true,
+      handler(val) { this.mfgrInput = val || ''; }
+    },
+    'ws.state.product': {
+      immediate: true,
+      handler(val) { this.prodInput = val || ''; }
+    },
+    'ws.state.serial': {
+      immediate: true,
+      handler(val) { this.serialInput = val || ''; }
+    }
   }
 };
