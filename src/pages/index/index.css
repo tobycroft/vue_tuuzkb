@@ -89,6 +89,13 @@
   border: 1px solid #3a3a3c;
   border-radius: 8px;
   padding: 10px 12px;
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.compact-info.mac-active {
+  border-color: #3cc51f;
+  background-color: #2a3a2a;
 }
 
 .compact-info span {

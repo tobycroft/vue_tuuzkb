@@ -9,7 +9,7 @@
         <div class="output-row">
           <button v-for="dev in ws.state.outputs" :key="dev.name" @click="switchOutput(dev.name)" :class="getOutputClass(dev.name)" type="button">输出 {{ dev.name }}</button>
         </div>
-        <div class="compact-info">
+        <div class="compact-info" :class="{ 'mac-active': ws.state.macmode }" @click="cmd('toggle_macmode')">
           <span><small>VID</small>{{ ws.state.vid || '—' }}</span>
           <span><small>PID</small>{{ ws.state.pid || '—' }}</span>
           <span><small>Baud</small>{{ ws.state.baud || '—' }}</span>
@@ -22,10 +22,6 @@
       <div class="mask-group">
         <span class="mask-tag" v-for="item in ws.parseKeyList(ws.state.MaskButton)" :key="item.hex" :title="item.hex">{{ item.display }}</span>
       </div>
-    </div>
-
-    <div class="btn-row">
-      <button @click="cmd('toggle_macmode')" :class="ws.state.macmode ? 'option-selected' : 'option-dim'" type="button">Mac</button>
     </div>
 
     <div class="sliders-panel">
