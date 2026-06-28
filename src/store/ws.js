@@ -30,40 +30,10 @@ const hidKeyNameMap = {
   'E4': 'Ctrl R', 'E5': 'Shift R', 'E6': 'Alt R', 'E7': 'Win R'
 }
 
-const modifierBitMap = {
-  '01': 'L Ctrl', '02': 'L Shift', '04': 'L Alt', '08': 'L Win',
-  '10': 'R Ctrl', '20': 'R Shift', '40': 'R Alt', '80': 'R Win'
-}
-
 export function getKeyName(code) {
   if (!code) return ''
   const key = code.toUpperCase().padStart(2, '0')
   return hidKeyNameMap[key] || code.toUpperCase()
-}
-
-function decodeModifierByte(hexCode) {
-  const n = parseInt(hexCode, 16)
-  if (isNaN(n) || n === 0) return null
-  if (n >= 0xE0 && n <= 0xE7) {
-    return hidKeyNameMap[n.toString(16).toUpperCase().padStart(2, '0')] || null
-  }
-  const names = []
-  for (const bit of Object.keys(modifierBitMap)) {
-    if (n & parseInt(bit, 16)) {
-      names.push(modifierBitMap[bit])
-    }
-  }
-  if (names.length > 0) return names.join(' + ')
-  return null
-}
-
-export function parseCtrlList(arr) {
-  if (!arr || arr.length === 0) return []
-  return arr.map(c => {
-    const decoded = decodeModifierByte(c)
-    const hex = c.toUpperCase().padStart(2, '0')
-    return { name: decoded || hex, hex: hex }
-  })
 }
 
 export function parseKeyList(arr) {
@@ -73,15 +43,6 @@ export function parseKeyList(arr) {
     const hex = c.toUpperCase().padStart(2, '0')
     return { name: name, hex: hex }
   })
-}
-
-export function formatCtrlList(arr) {
-  if (!arr || arr.length === 0) return ''
-  return arr.map(c => {
-    const decoded = decodeModifierByte(c)
-    const hex = c.toUpperCase().padStart(2, '0')
-    return decoded ? decoded + ' (' + hex + ')' : hex
-  }).join(', ')
 }
 
 export function formatKeyList(arr) {
@@ -101,7 +62,6 @@ const state = reactive({
   socket: null,
   connectionMessage: '未连接',
   connectionClass: 'status-failed',
-  MaskCtrl: [],
   MaskButton: [],
   pid: '',
   vid: '',
@@ -278,8 +238,6 @@ export default {
   getState,
   getKeyName,
   formatMaskList,
-  formatCtrlList,
   formatKeyList,
-  parseCtrlList,
   parseKeyList
 }

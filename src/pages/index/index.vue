@@ -16,12 +16,9 @@
       </div>
     </div>
 
-    <div class="mask-panel" v-if="(ws.state.MaskCtrl && ws.state.MaskCtrl.length > 0) || (ws.state.MaskButton && ws.state.MaskButton.length > 0)">
+    <div class="mask-panel" v-if="ws.state.MaskButton && ws.state.MaskButton.length > 0">
       <div class="mask-title">屏蔽状态</div>
-      <div class="mask-group" v-if="ws.state.MaskCtrl && ws.state.MaskCtrl.length > 0">
-        <span class="mask-tag" v-for="item in ws.parseCtrlList(ws.state.MaskCtrl)" :key="item.hex" :title="item.hex">{{ item.name }}</span>
-      </div>
-      <div class="mask-group" v-if="ws.state.MaskButton && ws.state.MaskButton.length > 0">
+      <div class="mask-group">
         <span class="mask-tag" v-for="item in ws.parseKeyList(ws.state.MaskButton)" :key="item.hex" :title="item.hex">{{ item.name }}</span>
       </div>
     </div>
