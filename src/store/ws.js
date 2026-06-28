@@ -26,8 +26,8 @@ const hidKeyNameMap = {
   '64': 'Keycode45', '65': 'APP',
   '85': 'Keycode107', '87': 'Keycode56', '88': 'J133', '89': 'Keycode14',
   '8A': 'J132', '8B': 'J131', '90': 'KC-L(Hangul)', '91': 'KC-R(Hanja)',
-  'E0': 'Ctrl L', 'E1': 'Shift L', 'E2': 'Alt L', 'E3': 'Win L',
-  'E4': 'Ctrl R', 'E5': 'Shift R', 'E6': 'Alt R', 'E7': 'Win R'
+  'E0': 'LCtrl', 'E1': 'LShift', 'E2': 'LAlt', 'E3': 'LWin',
+  'E4': 'RCtrl', 'E5': 'RShift', 'E6': 'RAlt', 'E7': 'RWin'
 }
 
 export function getKeyName(code) {
