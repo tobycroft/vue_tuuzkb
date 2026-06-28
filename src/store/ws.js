@@ -88,10 +88,29 @@ const state = reactive({
 
 let initialized = false
 
+function extractSortNumber(name) {
+  const match = name.match(/(\d+)/)
+  return match ? parseInt(match[1], 10) : Infinity
+}
+
+function sortOutputs(arr) {
+  if (!arr || arr.length === 0) return arr
+  return [...arr].sort((a, b) => {
+    const na = extractSortNumber(a.name || '')
+    const nb = extractSortNumber(b.name || '')
+    if (na !== nb) return na - nb
+    return (a.name || '').localeCompare(b.name || '')
+  })
+}
+
 function updateFormData(data) {
   for (const i in data) {
     if (data[i] !== undefined && data[i] !== null) {
-      state[i] = data[i]
+      if (i === 'outputs' && Array.isArray(data[i])) {
+        state[i] = sortOutputs(data[i])
+      } else {
+        state[i] = data[i]
+      }
     }
   }
 }
