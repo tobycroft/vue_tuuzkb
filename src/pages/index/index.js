@@ -53,6 +53,9 @@ export default {
     },
     getOutputClass(name) {
       return ws.state.currentOutput === name ? 'option-selected' : '';
+    },
+    cmd(type) {
+      ws.cmdFunc(type);
     }
   }
 };

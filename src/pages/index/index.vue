@@ -83,6 +83,10 @@
         <button @click="endPointOption(5)" :class="getEndpointClass(5)" type="button">Man</button>
       </div>
     </div>
+
+    <div class="btn-row">
+      <button @click="cmd('toggle_macmode')" :class="ws.state.macmode ? 'option-selected' : 'option-dim'" type="button">Mac</button>
+    </div>
   </div>
 </template>
 
